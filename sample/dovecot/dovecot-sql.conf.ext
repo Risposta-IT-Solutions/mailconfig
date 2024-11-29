@@ -1,0 +1,6 @@
+driver = mysql
+connect = host=127.0.0.1 dbname=postfix_db user=postfix_user password=Zz9730TH
+default_pass_scheme = SHA256
+
+password_query = SELECT email as user, password FROM virtual_users WHERE email='%u';
+user_query = SELECT email as user, '/var/mail/vhosts/%d/%n' as home, 'maildir:/var/mail/vhosts/%d/%n/Maildir' as mail, 5000 AS uid, 5000 AS gid FROM virtual_users WHERE email='%u';

@@ -1,0 +1,37 @@
+myhostname = mail.{{_domain_}}
+mydomain = {{_domain_}}
+myorigin = /etc/mailname
+inet_interfaces = all
+inet_protocols = all
+mydestination = mail.{{_domain_}}, localhost.{{_domain_}}, localhost
+relayhost = 
+smtpd_tls_cert_file=/etc/letsencrypt/live/mail.{{_domain_}}/fullchain.pem
+smtpd_tls_key_file=/etc/letsencrypt/live/mail.{{_domain_}}/privkey.pem
+smtpd_use_tls=yes
+smtpd_tls_auth_only = yes
+smtpd_tls_security_level = may
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_security_level = may
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = $myhostname
+broken_sasl_auth_clients = yes
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+mynetworks = 127.0.0.0/8
+smtpd_recipient_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination
+
+# Virtual domains and users
+virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
+virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
+virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf
+virtual_transport = dovecot
+mailbox_size_limit = 0
+recipient_delimiter = 
+
+milter_default_action = accept
+milter_protocol = 6
+smtpd_milters = inet:localhost:12301
+non_smtpd_milters = inet:localhost:12301
