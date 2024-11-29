@@ -1,0 +1,87 @@
+DOMAINNAME = {{_domain_}}
+PREFIX = {{_prefix_}}
+
+DKIM 
+
+sudo apt-get update
+sudo apt install postfix postfix-mysql dovecot-core dovecot-imapd dovecot-mysql mysql-server -y
+
+
+sudo apt-get install -y opendkim opendkim-tools mailutils acl php8.1 php8.1-common php8.1-cli php8.1-fpm php8.1-mbstring php8.1-xml php8.1-curl php8.1-zip php8.1-gd php8.1-intl php8.1-soap php8.1-opcache php8.1-readline php8.1-mysql ca-certificates certbot python3-certbot-apache opendkim opendkim-tools libapache2-mod-php
+sudo apt-get install -y roundcube roundcube-mysql 
+
+sudo groupadd -g 5000 vmail
+sudo useradd -g vmail -u 5000 vmail -d /var/mail
+
+############### IGNORE [USING GIT NOW] ================
+UPLOAD 
+postfix_db.sql 				to /root 
+
+{{_domain_}}.conf         to.        /etc/apache2/sites-available
+
+opendkim.conf,dovecot, roundcube, postfix           to          /etc
+########################
+
+
+
+sudo mkdir -p /etc/opendkim/keys/{{_domain_}}
+cd /etc/opendkim/keys/{{_domain_}}
+sudo opendkim-genkey -s mail -d {{_domain_}}
+
+sudo certbot --apache -d mail.{{_domain_}} -d smtp.{{_domain_}} -d imap.{{_domain_}}
+=======================
+email : {{_prefix_}}@{{_domain_}}
+Y - N 
+
+
+a2ensite webmail.{{_domain_}}
+systemctl reload apache2
+sudo certbot --apache -d webmail.{{_domain_}}
+
+sudo mkdir -p /var/mail/vhosts/{{_domain_}}/{{_prefix_}}
+sudo maildirmake.dovecot /var/mail/vhosts/{{_domain_}}/{{_prefix_}}
+sudo chown -R vmail:vmail /var/mail/vhosts/{{_domain_}}/{{_prefix_}}
+sudo maildirmake.dovecot /var/mail/vhosts/{{_domain_}}/root
+sudo chown -R vmail:vmail /var/mail/vhosts/{{_domain_}}/root
+
+
+mysql
+=======================⪼⪼⪼ 
+CREATE DATABASE postfix_db;
+CREATE USER 'postfix_user'@'localhost' IDENTIFIED BY 'Zz9730TH';
+GRANT ALL PRIVILEGES ON postfix_db.* TO 'postfix_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT
+
+cd ~
+mysql postfix_db < postfix_db.sql
+
+
+mysql_secure_installation
+====================
+Would you like to setup VALIDATE PASSWORD component?
+Press y|Y for Yes, any other key for No: N
+Remove anonymous users? (Press y|Y for Yes, any other key for No) : Y
+Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
+Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
+
+sudo systemctl restart postfix dovecot
+
+chmod 0777  /var/log/dovecot.log /var/log/dovecot-info.log /var/log/dovecot-debug.log
+
+
+///Add new email
+mysql
+=======================
+use postfix_db
+INSERT INTO `virtual_users` VALUES (1,1,‘a84f69cdf4c0cac5e6c8bb8043f5655b3c5ae5bd1908397c873c72a32ebff30a’,‘{{_prefix_}}@{{_domain_}}’),(2,1,‘5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8’,‘root@{{_domain_}}’);
+EXIT
+sudo mkdir -p /var/mail/vhosts/{{_domain_}}/{{_prefix_}}
+sudo maildirmake.dovecot /var/mail/vhosts/{{_domain_}}/{{_prefix_}}
+sudo chown -R vmail:vmail /var/mail/vhosts/{{_domain_}}/{{_prefix_}}
+
+“{{_prefix_}}” with email prefix e.g. “dawn” of dawn@{{_domain_}}
+
+and
+
+“{{_domain_}}” with domain name
