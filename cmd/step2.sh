@@ -16,6 +16,9 @@ install_services() {
     echo "Updating package list..."
     apt-get update -y
 
+    # Set DEBIAN_FRONTEND to noninteractive to avoid popups
+    export DEBIAN_FRONTEND=noninteractive
+
     echo "Installing Postfix, Dovecot, and MySQL..."
     apt-get install -y \
         $POSTFIX_PACKAGES \
