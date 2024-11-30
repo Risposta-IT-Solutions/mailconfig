@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Source the configuration file for DOMAIN
-if [ -f ./config.env ]; then
-  source ./config.env
+if [ -f /home/config.env ]; then
+  source /home/config.env
 else
   echo "Configuration file not found!"
   exit 1

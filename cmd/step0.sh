@@ -11,7 +11,7 @@ DOMAIN="$1"
 PREFIX="$2"
 
 # Define the configuration file path
-CONF_FILE="config.env"
+CONF_FILE="/home/config.env"
 
 # Create or overwrite the configuration file
 echo "DOMAIN=$DOMAIN" > $CONF_FILE
