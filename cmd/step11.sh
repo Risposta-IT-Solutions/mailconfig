@@ -22,9 +22,7 @@ USE postfix_db;
 DELETE FROM virtual_users WHERE email = '$PREFIX@$DOMAIN' OR email = 'root@$DOMAIN';
 INSERT INTO virtual_users (domain_id, password, email) VALUES 
   (1, 'a84f69cdf4c0cac5e6c8bb8043f5655b3c5ae5bd1908397c873c72a32ebff30a', '$PREFIX@$DOMAIN'),
-  (1, '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'root@$DOMAIN');
-EXIT;
-"
+  (1, '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'root@$DOMAIN');"
 
 # Check if MySQL query was successful
 if [ $? -eq 0 ]; then
