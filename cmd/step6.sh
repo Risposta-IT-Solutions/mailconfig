@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source the configuration file for DOMAIN
-CONF_FILE="/root/conf.env"
+CONF_FILE="./conf.env"
 
 if [ -f "$CONF_FILE" ]; then
   source "$CONF_FILE"
