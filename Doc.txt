@@ -17,7 +17,7 @@ sudo useradd -g vmail -u 5000 vmail -d /var/mail
 UPLOAD 
 postfix_db.sql 				to /root 
 
-{{_domain_}}.conf         to.        /etc/apache2/sites-available
+webmail.{{_domain_}}.conf         to.        /etc/apache2/sites-available
 
 opendkim.conf,dovecot, roundcube, postfix           to          /etc
 ########################
