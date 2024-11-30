@@ -19,15 +19,15 @@ echo "Inserting new email into the database..."
 # Securely run the MySQL command
 mysql -u root -e "
 USE postfix_db;
-INSERT INTO virtual_users (id, domain_id, password, email)
-  SELECT 1, 1, 'a84f69cdf4c0cac5e6c8bb8043f5655b3c5ae5bd1908397c873c72a32ebff30a', '$PREFIX@$DOMAIN'
-  WHERE NOT EXISTS (SELECT 1 FROM virtual_users WHERE email = '$PREFIX@$DOMAIN');
+INSERT INTO virtual_users (id, domain_id, password, email) VALUES
+  (1, 1, 'a84f69cdf4c0cac5e6c8bb8043f5655b3c5ae5bd1908397c873c72a32ebff30a', '$PREFIX@$DOMAIN')
+  ON DUPLICATE KEY UPDATE password = 'a84f69cdf4c0cac5e6c8bb8043f5655b3c5ae5bd1908397c873c72a32ebff30a', email = '$PREFIX@$DOMAIN',
   
-INSERT INTO virtual_users (id, domain_id, password, email)
-  SELECT 2, 1, '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'root@$DOMAIN'
-  WHERE NOT EXISTS (SELECT 1 FROM virtual_users WHERE email = 'root@$DOMAIN');
+  (2, 1, '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'root@$DOMAIN')
+  ON DUPLICATE KEY UPDATE password = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', email = 'root@$DOMAIN';
 EXIT;
 "
+
 
 
 
