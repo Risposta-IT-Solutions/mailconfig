@@ -53,11 +53,8 @@ reset_services() {
 }
 
 # Check the passed argument (install or reset)
-if [[ "$1" == "i" ]]; then
-    install_services
-elif [[ "$1" == "r" ]]; then
+if [[ "$1" == "r" ]]; then
     reset_services
 else
-    echo "Usage: $0 {i|r} \n i: install services \n r: reset services"
-    exit 1
+    install_services
 fi

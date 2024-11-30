@@ -65,11 +65,8 @@ reset_php() {
 }
 
 # Check the passed argument (install or reset)
-if [[ "$1" == "i" ]]; then
-    install_php
-elif [[ "$1" == "r" ]]; then
+if [[ "$1" == "r" ]]; then
     reset_php
 else
-    echo "Usage: $0 {i|r} \n i - install PHP $PHP_VERSION and its modules \n r - remove PHP $PHP_VERSION and its modules"
-    exit 1
+   install_php
 fi
