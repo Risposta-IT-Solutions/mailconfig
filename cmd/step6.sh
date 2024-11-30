@@ -8,7 +8,7 @@ else
   exit 1
 fi
 
-echo "Current working directory: $(pwd)"
+cd /home/mailconfig/
 
 if [ -z "$DOMAIN" ]; then
   echo "Error: DOMAIN is not set in $CONF_FILE."
