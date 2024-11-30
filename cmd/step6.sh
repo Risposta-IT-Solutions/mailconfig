@@ -1,12 +1,10 @@
 #!/bin/bash
 
 # Source the configuration file for DOMAIN
-CONF_FILE="./conf.env"
-
-if [ -f "$CONF_FILE" ]; then
-  source "$CONF_FILE"
+if [ -f ./config.env ]; then
+  source ./config.env
 else
-  echo "Error: Configuration file $CONF_FILE not found."
+  echo "Configuration file not found!"
   exit 1
 fi
 
