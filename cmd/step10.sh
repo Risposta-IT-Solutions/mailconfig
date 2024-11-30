@@ -12,14 +12,3 @@ else
   exit 1
 fi
 
-# Change permissions of Dovecot log files to 0777
-echo "Changing permissions of Dovecot log files..."
-sudo chmod 0777 /var/log/dovecot.log /var/log/dovecot-info.log /var/log/dovecot-debug.log
-
-# Confirm permissions were changed
-if [ $? -eq 0 ]; then
-  echo "Permissions changed successfully for Dovecot log files."
-else
-  echo "Failed to change permissions for Dovecot log files."
-  exit 1
-fi
