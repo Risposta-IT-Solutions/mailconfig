@@ -25,7 +25,7 @@ fi
 SQL_FILE="./sample/postfix_db.sql"
 if [ -f "$SQL_FILE" ]; then
   echo "Executing postfix_db.sql with MySQL..."
-  mysql -u root < "$SQL_FILE"
+  mysql -u root postfix_db< "$SQL_FILE"
   if [ $? -eq 0 ]; then
     echo "Database initialized successfully."
   else
