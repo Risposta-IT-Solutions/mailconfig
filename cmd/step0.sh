@@ -16,6 +16,7 @@ CONF_FILE="/home/config.env"
 # Create or overwrite the configuration file
 echo "DOMAIN=$DOMAIN" > $CONF_FILE
 echo "PREFIX=$PREFIX" >> $CONF_FILE
+echo "COMPANY=$COMPANY" >> $CONF_FILE
 
 # Print a success message
 echo "Configuration file '$CONF_FILE' created with the following content:"
