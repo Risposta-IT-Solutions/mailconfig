@@ -29,3 +29,18 @@
 </body>
 
 </html>
+
+<script>
+    let url = 'https://jenkins.pay-per-lead.co.uk/job/Agent-Deploy/buildWithParameters?token=deploy';
+    let form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let formData = new FormData(form);
+        let params = new URLSearchParams(formData).toString();
+        fetch(`${url}&${params}`, {
+            method: 'POST'
+        }).then(response => {
+            alert('Deploy job triggered');
+        });
+    });
+</script>
