@@ -39,23 +39,27 @@
 <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
-        let formData = new FormData(form);
-        let params = new URLSearchParams(formData).toString();
-        let triggerURL = `https://jenkins.pay-per-lead.co.uk/job/Agent-Deploy/buildWithParameters?token=deploy&${params}`;
+        try {
+            e.preventDefault();
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            let formData = new FormData(form);
+            let params = new URLSearchParams(formData).toString();
+            let triggerURL = `https://jenkins.pay-per-lead.co.uk/job/Agent-Deploy/buildWithParameters?token=deploy&${params}`;
 
-        $.get(triggerURL).always(() => {
-            let op = document.querySelector('#output');
-            op.classList.remove('hide');
-            op.innerHTML = `
+            $.get(triggerURL).always(() => {
+                let op = document.querySelector('#output');
+                op.classList.remove('hide');
+                op.innerHTML = `
                 <div class="alert alert-success">
                  Deployed Successfully <br>
                  <small>${triggerURL}</small>
                 </div>`;
-        });
+            });
+        } catch (error) {
+            //
+        }
     });
 </script>
