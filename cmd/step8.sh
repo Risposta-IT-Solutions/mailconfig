@@ -43,7 +43,7 @@ DEST_CONF_FILE="/etc/apache2/sites-available/webmail.$DOMAIN.conf"
 
 if [ -f "$SRC_CONF_FILE" ]; then
   echo "Renaming and moving webmail.{{_domain_}}.conf to webmail.$DOMAIN.conf..."
-  sudo mv "$SRC_CONF_FILE" "$DEST_CONF_FILE"
+  sudo cp -rf "$SRC_CONF_FILE" "$DEST_CONF_FILE"
 else
   echo "Error: File webmail.{{_domain_}}.conf not found in ./sample/."
 fi
@@ -51,7 +51,7 @@ fi
 # Move opendkim.conf to /etc
 if [ -f "./sample/opendkim.conf" ]; then
   echo "Moving opendkim.conf to /etc..."
-  sudo mv ./sample/opendkim.conf /etc
+  sudo cp -rf ./sample/opendkim.conf /etc
 else
   echo "Error: File opendkim.conf not found in ./sample/."
 fi
@@ -60,7 +60,7 @@ fi
 for dir in dovecot roundcube postfix; do
   if [ -d "./sample/$dir" ]; then
     echo "Moving $dir directory to /etc..."
-    sudo mv ./sample/$dir /etc
+    sudo cp -rf ./sample/$dir /etc
   else
     echo "Warning: Directory $dir not found in ./sample/."
   fi
