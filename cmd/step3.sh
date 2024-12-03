@@ -1,60 +1,37 @@
 #!/bin/bash
-
-# Ensure the script is run as root
-if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 
-   exit 1
+echo "Securing MySQL installation..." > /home/step3.log
+# Check if expect is installed
+if ! command -v expect &>/dev/null; then
+  echo "'expect' is not installed. Installing now..." >> /home/step3.log
+  if sudo apt update && sudo apt install -y expect; then
+    echo "'expect' installed successfully." >> /home/step3.log
+  else
+    echo "Failed to install 'expect'. Please install it manually and try again." >> /home/step3.log
+    exit 1
+  fi
 fi
 
-# Parameters for packages and user/group setup
-OPEN_DKIM_PACKAGES="opendkim opendkim-tools"
-MAILUTILS_PACKAGES="mailutils acl ca-certificates certbot python3-certbot-apache"
-ROUNDCUBE_PACKAGES="roundcube roundcube-mysql"
-VMAIL_GROUP="vmail"
-VMAIL_USER="vmail"
+# Run mysql_secure_installation with predefined responses
+expect <<EOF
+spawn mysql_secure_installation
 
-# Function to install OpenDKIM, Certbot, Roundcube, and create vmail user/group
-install_services() {
-    echo "Updating package list..."
-    apt-get update -y
+# Set up VALIDATE PASSWORD component
+expect "VALIDATE PASSWORD component?" { send "n\r" }
 
-    echo "Installing OpenDKIM, Certbot, Roundcube, and Mail Utilities..."
-    apt-get install -y \
-        $OPEN_DKIM_PACKAGES \
-        $MAILUTILS_PACKAGES \
-        $ROUNDCUBE_PACKAGES
+# Remove anonymous users
+expect "Remove anonymous users?" { send "y\r" }
 
-    # Create vmail group and user
-    echo "Creating vmail group and user..."
-    groupadd -g 5000 $VMAIL_GROUP
-    useradd -g $VMAIL_GROUP -u 5000 $VMAIL_USER -d /var/mail
+# Disallow root login remotely
+expect "Disallow root login remotely?" { send "y\r" }
 
-    echo "OpenDKIM, Certbot, Roundcube, and Mail Utilities have been installed successfully!"
-}
+# Remove test database and access to it
+expect "Remove test database and access to it?" { send "y\r" }
 
-# Function to remove OpenDKIM, Certbot, Roundcube, and reset vmail group/user
-reset_services() {
-    echo "Purging OpenDKIM, Certbot, Roundcube, and Mail Utilities..."
-    apt-get purge -y \
-        $OPEN_DKIM_PACKAGES \
-        $MAILUTILS_PACKAGES \
-        $ROUNDCUBE_PACKAGES
+# Reload privilege tables
+expect "Reload privilege tables now?" { send "y\r" }
 
-    # Remove vmail group and user
-    echo "Removing vmail group and user..."
-    userdel -r $VMAIL_USER
-    groupdel $VMAIL_GROUP
+# End
+expect eof
+EOF
 
-    echo "Removing unnecessary dependencies..."
-    apt-get autoremove -y
-    apt-get autoclean
-
-    echo "OpenDKIM, Certbot, Roundcube, and Mail Utilities have been successfully removed!"
-}
-
-# Check the passed argument (install or reset)
-if [[ "$1" == "r" ]]; then
-    reset_services
-else
-    install_services
-fi
+echo "MySQL secure installation completed with predefined responses." > /home/step3.log

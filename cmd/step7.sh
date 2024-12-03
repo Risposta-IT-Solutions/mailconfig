@@ -1,15 +1,19 @@
 #!/bin/bash
 
-DB_NAME="postfix_db"
-DB_USER="postfix_user"
-DB_PASSWORD="Zz9730TH"
+# Check if the domain parameter is provided
+if [ -f /home/config.env ]; then
+  source /home/config.env
+else
+  echo "Configuration file not found!"
+  exit 1
+fi
 
-mysql -u root <<EOF
-CREATE DATABASE IF NOT EXISTS $DB_NAME;
-CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';
-FLUSH PRIVILEGES;
-EXIT;
-EOF
+cd /home/mailconfig/
 
-echo "Database '$DB_NAME' and user '$DB_USER' created successfully."
+# Define the target directory
+TARGET_DIR="./sample"
+
+# Loop through all files in the target directory and replace the placeholder
+find "$TARGET_DIR" -type f -exec sed -i -e "s/{{_domain_}}/$DOMAIN/g" -e "s/{{_company_}}/$COMPANY/g" {} +
+
+echo "Replaced {{_domain_}} with $DOMAIN in all files in $TARGET_DIR." > /home/step7.log

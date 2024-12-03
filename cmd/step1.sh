@@ -11,10 +11,10 @@ PHP_VERSION="8.1"
 
 # Function to install PHP 8.1 and its modules
 install_php() {
-    echo "Updating package list..."
+    echo "Updating package list..." > /home/step1.log
     apt-get update -y
 
-    echo "Installing PHP $PHP_VERSION and modules..."
+    echo "Installing PHP $PHP_VERSION and modules..." >> /home/step1.log
     apt-get install -y \
         php$PHP_VERSION \
         php$PHP_VERSION-common \
@@ -33,13 +33,13 @@ install_php() {
         libapache2-mod-php$PHP_VERSION
 
     # Verify installation
-    echo "PHP $PHP_VERSION and its modules have been installed successfully!"
+    echo "PHP $PHP_VERSION and its modules have been installed successfully!" >> /home/step1.log
     php$PHP_VERSION -v
 }
 
 # Function to remove PHP 8.1 and its modules
 reset_php() {
-    echo "Purging PHP $PHP_VERSION and its modules..."
+    echo "Purging PHP $PHP_VERSION and its modules..." > /home/step1.log
     apt-get purge -y \
         php$PHP_VERSION \
         php$PHP_VERSION-common \
@@ -57,11 +57,11 @@ reset_php() {
         php$PHP_VERSION-mysql \
         libapache2-mod-php$PHP_VERSION
 
-    echo "Removing unnecessary dependencies..."
+    echo "Removing unnecessary dependencies..." >> /home/step1.log
     apt-get autoremove -y
     apt-get autoclean
 
-    echo "PHP $PHP_VERSION and its modules have been successfully removed!"
+    echo "PHP $PHP_VERSION and its modules have been successfully removed!" >> /home/step1.log
 }
 
 # Check the passed argument (install or reset)

@@ -14,7 +14,7 @@ if [ -z "$DOMAIN" ] || [ -z "$PREFIX" ]; then
 fi
 
 # MySQL commands to insert new email user into virtual_users table
-echo "Inserting new email into the database..."
+echo "Inserting new email into the database..." > /home/step11.log
 
 # Securely run the MySQL command
 mysql -u root -e "
@@ -26,28 +26,28 @@ INSERT INTO virtual_users (domain_id, password, email) VALUES
 
 # Check if MySQL query was successful
 if [ $? -eq 0 ]; then
-  echo "Email '$PREFIX@$DOMAIN' inserted into the database successfully."
+  echo "Email '$PREFIX@$DOMAIN' inserted into the database successfully." >> /home/step11.log
 else
-  echo "Failed to insert email into the database."
+  echo "Failed to insert email into the database." >> /home/step11.log
   exit 1
 fi
 
 # Create the directory for the new email
-echo "Creating directory for email $PREFIX@$DOMAIN..."
+echo "Creating directory for email $PREFIX@$DOMAIN..." >> /home/step11.log
 sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
 
 # Make directories for Dovecot mail storage
-echo "Creating Dovecot mail directories..."
+echo "Creating Dovecot mail directories..." >> /home/step11.log
 sudo maildirmake.dovecot /var/mail/vhosts/$DOMAIN/$PREFIX
 
 # Change ownership of the email directories
-echo "Changing ownership of mail directories..."
+echo "Changing ownership of mail directories..." >> /home/step11.log
 sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/$PREFIX
 
 # Confirm the operations were successful
 if [ $? -eq 0 ]; then
-  echo "Directory and permissions set up successfully for $PREFIX@$DOMAIN."
+  echo "Directory and permissions set up successfully for $PREFIX@$DOMAIN." >> /home/step11.log
 else
-  echo "Failed to set up directory or permissions for $PREFIX@$DOMAIN."
+  echo "Failed to set up directory or permissions for $PREFIX@$DOMAIN." >> /home/step11.log
   exit 1
 fi
