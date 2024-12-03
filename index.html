@@ -13,15 +13,19 @@
         <form class="my-4">
             <div class="form-group">
                 <label for="domain">Domain</label>
-                <input type="text" class="form-control" id="domain" name="domain" placeholder="Enter Domain">
+                <input type="text" class="form-control" name="domain" placeholder="Enter Domain" required>
             </div>
             <div class="form-group">
                 <label for="ip">IP</label>
-                <input type="text" class="form-control" id="ip" name="ip" placeholder="Enter IP">
+                <input type="text" class="form-control" name="ip" placeholder="Enter IP" required>
             </div>
             <div class="form-group">
                 <label for="prefix">Prefix</label>
-                <input type="text" class="form-control" id="prefix" name="prefix" placeholder="Enter Prefix">
+                <input type="text" class="form-control" name="prefix" placeholder="Enter Prefix" required>
+            </div>
+            <div class="form-group">
+                <label for="prefix">Prefix</label>
+                <input type="text" class="form-control" name="company" placeholder="Enter Prefix" required>
             </div>
             <button type="submit" class="btn btn-primary">Deploy</button>
         </form>
@@ -35,6 +39,10 @@
     let form = document.querySelector('form');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
         let formData = new FormData(form);
         let params = new URLSearchParams(formData).toString();
         fetch(`${url}&${params}`, {
