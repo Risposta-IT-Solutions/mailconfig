@@ -47,7 +47,7 @@
         let params = new URLSearchParams(formData).toString();
         fetch(url + '&' + params, {
             method: 'POST'
-        }).then(response => {
+        }).finally(() => {
             alert('Deploy job triggered');
         });
     });
