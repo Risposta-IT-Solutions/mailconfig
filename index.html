@@ -28,6 +28,8 @@
                 <input type="text" class="form-control" name="company" placeholder="Enter Prefix" required>
             </div>
             <button type="submit" class="btn btn-primary">Deploy</button>
+
+            <section class="my-4 border hide" id="output"></section>
         </form>
     </div>
 </body>
@@ -35,7 +37,6 @@
 </html>
 
 <script>
-    let url = 'https://jenkins.pay-per-lead.co.uk/job/Agent-Deploy/buildWithParameters?token=deploy';
     let form = document.querySelector('form');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -45,10 +46,15 @@
         }
         let formData = new FormData(form);
         let params = new URLSearchParams(formData).toString();
-        fetch(url + '&' + params, {
+        let triggerURL = `https://jenkins.pay-per-lead.co.uk/job/Agent-Deploy/buildWithParameters?token=deploy&${params}`;
+        fetch(triggerURL, {
             method: 'POST'
         }).finally(() => {
-            alert('Deploy job triggered');
+            $('#output').removeClass('hide').html(`
+            <div class="alert alert-success">
+             Deployed Successfully <br>
+             <small>${triggerURL}</small>
+            </div>`);
         });
     });
 </script>
