@@ -35,7 +35,7 @@
 </body>
 
 </html>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', (e) => {
@@ -48,9 +48,7 @@
         let params = new URLSearchParams(formData).toString();
         let triggerURL = `https://jenkins.pay-per-lead.co.uk/job/Agent-Deploy/buildWithParameters?token=deploy&${params}`;
 
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', triggerURL, true);
-        xhr.onload = function () {
+        $.get(triggerURL).always(() => {
             let op = document.querySelector('#output');
             op.classList.remove('hide');
             op.innerHTML = `
@@ -58,7 +56,6 @@
                  Deployed Successfully <br>
                  <small>${triggerURL}</small>
                 </div>`;
-        };
-        xhr.send();
+        });
     });
 </script>
