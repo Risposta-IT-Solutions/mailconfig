@@ -50,11 +50,13 @@
         fetch(triggerURL, {
             method: 'POST'
         }).finally(() => {
-            $('#output').removeClass('hide').html(`
+            let op = document.querySelector('#output');
+            op.classList.remove('hide');
+            op.innerHTML = `
             <div class="alert alert-success">
              Deployed Successfully <br>
              <small>${triggerURL}</small>
-            </div>`);
+            </div>`;
         });
     });
 </script>
