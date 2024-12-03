@@ -24,4 +24,15 @@ echo "Configuration file '$CONF_FILE' created with the following content:"
 cat $CONF_FILE
 
 
+#allow ports
+ufw allow http
+ufw allow https
+ufw allow smtp
+ufw allow imaps
+ufw allow 587
+ufw allow 465
+ufw allow ssh
 
+ufw enable
+
+echo "Ufw enabled and ports allowed"

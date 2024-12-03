@@ -29,7 +29,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Deploy</button>
 
-            <section class="my-4 border hide" id="output"></section>
+            <section class="my-4" id="output"></section>
         </form>
     </div>
 </body>
@@ -51,12 +51,14 @@
 
             $.get(triggerURL).always(() => {
                 let op = document.querySelector('#output');
-                op.classList.remove('hide');
                 op.innerHTML = `
                 <div class="alert alert-success">
-                 Deployed Successfully <br>
-                 <small>${triggerURL}</small>
+                 Deployed Successfully <br><br>
+                 <small>Click the link below to run again (manually) : <br> <br> <a href="${triggerURL}" target="_blank">${triggerURL}</a></small>
                 </div>`;
+                setTimeout(() => {
+                    op.innerHTML = '';
+                }, 15000);
             });
         } catch (error) {
             //
