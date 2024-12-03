@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if the required parameters are provided
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3"]; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
   echo "Usage: $0 <domain> <prefix> <company>"
   exit 1
 fi
@@ -10,6 +10,7 @@ fi
 DOMAIN="$1"
 PREFIX="$2"
 COMPANY="$3"
+
 # Define the configuration file path
 CONF_FILE="/home/config.env"
 
