@@ -18,28 +18,48 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# Step 1: Add ServerName and ServerAlias to Apache configuration
+# Add ServerName and ServerAlias if not already present
 if [ -f "$VHOST_FILE" ]; then
-  echo "Updating Apache vhost configuration: $VHOST_FILE"
+    echo "Processing Apache vhost file: $VHOST_FILE"
 
-  # Backup the original vhost file
-  cp "$VHOST_FILE" "${VHOST_FILE}.bak"
+    # Variable to hold the directives to add
+    ADD_DIRECTIVES=""
 
-  # Add ServerName and ServerAlias if not already present
-  if ! grep -q "ServerName mail.${DOMAIN}" "$VHOST_FILE"; then
-    echo "Adding ServerName to vhost file."
-    if grep -q "<VirtualHost" "$APACHE_CONF"; then
-        echo "Adding ServerName and ServerAlias inside <VirtualHost> tag..."
-        sed -i "/<VirtualHost.*>/a \\    ServerName mail.$DOMAIN\\n    ServerAlias smtp.$DOMAIN imap.$DOMAIN" "$APACHE_CONF"
-    else
-        echo "VirtualHost tag not found in $APACHE_CONF. Exiting."
-        exit 1
+    # Check and add ServerName
+    if ! grep -q "ServerName mail.${DOMAIN}" "$VHOST_FILE"; then
+        echo "ServerName mail.${DOMAIN} not found. Adding to directives."
+        ADD_DIRECTIVES="${ADD_DIRECTIVES}    ServerName mail.${DOMAIN}\n"
     fi
-  fi
+
+    # Check and add ServerAlias for smtp.${DOMAIN}
+    if ! grep -q "ServerAlias.*smtp.${DOMAIN}" "$VHOST_FILE"; then
+        echo "ServerAlias smtp.${DOMAIN} not found. Adding to directives."
+        ADD_DIRECTIVES="${ADD_DIRECTIVES}    ServerAlias smtp.${DOMAIN}\n"
+    fi
+
+    # Check and add ServerAlias for imap.${DOMAIN}
+    if ! grep -q "ServerAlias.*imap.${DOMAIN}" "$VHOST_FILE"; then
+        echo "ServerAlias imap.${DOMAIN} not found. Adding to directives."
+        ADD_DIRECTIVES="${ADD_DIRECTIVES}    ServerAlias imap.${DOMAIN}\n"
+    fi
+
+    # Add the collected directives inside the <VirtualHost> tag
+    if [ -n "$ADD_DIRECTIVES" ]; then
+        if grep -q "<VirtualHost" "$VHOST_FILE"; then
+            echo "Adding directives inside <VirtualHost> tag..."
+            sed -i "/<VirtualHost.*>/a \\$ADD_DIRECTIVES" "$VHOST_FILE"
+        else
+            echo "VirtualHost tag not found in $VHOST_FILE. Exiting."
+            exit 1
+        fi
+    else
+        echo "All required directives are already present in $VHOST_FILE."
+    fi
 else
-  echo "Error: Apache vhost file $VHOST_FILE not found."
-  exit 1
+    echo "Error: Apache vhost file $VHOST_FILE not found."
+    exit 1
 fi
+
 
 # Step 2: Reload Apache configuration
 echo "Reloading Apache configuration."
