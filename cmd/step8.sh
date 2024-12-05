@@ -41,11 +41,23 @@ fi
 SRC_CONF_FILE="./sample/webmail.{{_domain_}}.conf"
 DEST_CONF_FILE="/etc/apache2/sites-available/webmail.$DOMAIN.conf"
 
+SRC_DEF_VHOST_FILE="./sample/000-default.conf"
+DEF_VHOST_FILE="/etc/apache2/sites-available/000-default.conf"
+
+
 if [ -f "$SRC_CONF_FILE" ]; then
   echo "Renaming and moving webmail.{{_domain_}}.conf to webmail.$DOMAIN.conf..." >> /home/logs/step8.log
   sudo cp -rf "$SRC_CONF_FILE" "$DEST_CONF_FILE"
 else
   echo "Error: File webmail.{{_domain_}}.conf not found in ./sample/." >> /home/logs/step8.log
+  exit 1
+fi
+
+if [ -f "$SRC_DEF_VHOST_FILE" ]; then
+  echo "Renaming and moving 000-default.conf" >> /home/logs/step8.log
+  sudo cp -rf "$SRC_DEF_VHOST_FILE" "$DEF_VHOST_FILE"
+else
+  echo "Error: File 000-default.conf not found in ./sample/." >> /home/logs/step8.log
   exit 1
 fi
 
