@@ -81,4 +81,30 @@ for dir in dovecot roundcube postfix; do
   fi
 done
 
-echo "All specified operations have been completed successfully." >> /home/logs/step8.log
+echo "Configuration files copied to /etc." >> /home/logs/step8.log
+
+echo "Obtaining SSL certificates for mail services..." >> /home/logs/step8.log
+
+echo "Command: sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email" >> /home/logs/step8.log
+
+sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email
+
+if [ $? -ne 0 ]; then
+  echo "Error obtaining SSL certificates for mail services!" >> /home/logs/step8.log
+
+  echo "Fixing vhost configuration for mail services..." >> /home/logs/step8.log
+
+  ./cmd/step8.sh
+
+  if [ $? -ne 0 ]; then
+    echo "Fixing vhost failed!" >> /home/logs/step8.log
+    exit 1
+  fi
+
+else
+  echo "SSL certificates obtained successfully for: mail.$DOMAIN, smtp.$DOMAIN and imap.$DOMAIN" >> /home/logs/step8.log
+fi
+
+
+echo "DKIM keys generated and SSL certificates obtained for $DOMAIN with email $EMAIL." >> /home/logs/step8.log
+
