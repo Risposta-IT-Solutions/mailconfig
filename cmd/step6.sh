@@ -15,6 +15,13 @@ sudo mkdir -p /etc/opendkim/keys/$DOMAIN
 cd /etc/opendkim/keys/$DOMAIN
 sudo opendkim-genkey -s mail -d $DOMAIN
 
+if [ $? -ne 0 ]; then
+  echo "Error generating DKIM keys for $DOMAIN!" >> /home/logs/step6.log
+  exit 1
+else
+  echo "DKIM keys generated successfully for $DOMAIN" >> /home/logs/step6.log
+fi
+
 # Step 2: Obtain SSL certificates using Certbot without interaction
 echo "Obtaining SSL certificates for mail services..." >> /home/logs/step6.log
 sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN \
