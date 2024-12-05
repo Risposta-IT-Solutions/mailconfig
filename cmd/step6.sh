@@ -31,7 +31,18 @@ sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-inte
 
 if [ $? -ne 0 ]; then
   echo "Error obtaining SSL certificates for mail services!" >> /home/logs/step6.log
-  exit 1
+
+  echo "Fixing vhost configuration for mail services..." >> /home/logs/step6.log
+
+  ./cmd/fix_vhost.sh
+
+  sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email
+
+  if [ $? -ne 0 ]; then
+    echo "Fixing vhost failed!" >> /home/logs/step6.log
+    exit 1
+  fi
+
 else
   echo "SSL certificates obtained successfully for: mail.$DOMAIN, smtp.$DOMAIN and imap.$DOMAIN" >> /home/logs/step6.log
 fi
