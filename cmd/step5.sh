@@ -19,6 +19,7 @@ install_services() {
     apt-get update -y
 
     echo "Installing OpenDKIM, Certbot, Roundcube, and Mail Utilities..." >> /home/logs/step5.log
+    echo "Command: apt-get install -y $OPEN_DKIM_PACKAGES $MAILUTILS_PACKAGES $ROUNDCUBE_PACKAGES" >> /home/logs/step5.log
     apt-get install -y \
         $OPEN_DKIM_PACKAGES \
         $MAILUTILS_PACKAGES \

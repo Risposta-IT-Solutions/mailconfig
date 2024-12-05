@@ -24,9 +24,10 @@ fi
 
 # Step 2: Obtain SSL certificates using Certbot without interaction
 echo "Obtaining SSL certificates for mail services..." >> /home/logs/step6.log
-sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email
 
-echo "Ran command: sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email" >> /home/logs/step6.log
+echo "Command: sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email" >> /home/logs/step6.log
+
+sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email
 
 if [ $? -ne 0 ]; then
   echo "Error obtaining SSL certificates for mail services!" >> /home/logs/step6.log
