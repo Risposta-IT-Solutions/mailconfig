@@ -28,12 +28,13 @@ if [ -f "$VHOST_FILE" ]; then
   # Add ServerName and ServerAlias if not already present
   if ! grep -q "ServerName mail.${DOMAIN}" "$VHOST_FILE"; then
     echo "Adding ServerName to vhost file."
-    echo "ServerName mail.${DOMAIN}" >> "$VHOST_FILE"
-  fi
-
-  if ! grep -q "ServerAlias smtp.${DOMAIN} imap.${DOMAIN}" "$VHOST_FILE"; then
-    echo "Adding ServerAlias to vhost file."
-    echo "ServerAlias smtp.${DOMAIN} imap.${DOMAIN}" >> "$VHOST_FILE"
+    if grep -q "<VirtualHost" "$APACHE_CONF"; then
+        echo "Adding ServerName and ServerAlias inside <VirtualHost> tag..."
+        sed -i "/<VirtualHost.*>/a \\    ServerName mail.$DOMAIN\\n    ServerAlias smtp.$DOMAIN imap.$DOMAIN" "$APACHE_CONF"
+    else
+        echo "VirtualHost tag not found in $APACHE_CONF. Exiting."
+        exit 1
+    fi
   fi
 else
   echo "Error: Apache vhost file $VHOST_FILE not found."

@@ -36,8 +36,6 @@ if [ $? -ne 0 ]; then
 
   ./cmd/fix_vhost.sh
 
-  sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email
-
   if [ $? -ne 0 ]; then
     echo "Fixing vhost failed!" >> /home/logs/step6.log
     exit 1
