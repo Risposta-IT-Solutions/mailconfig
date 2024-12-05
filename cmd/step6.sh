@@ -12,12 +12,11 @@ DB_USER="roundcube"
 DB_PASSWORD="Zz9730TH"
 
 
-mysql -u root <<EOF
+mysql -u root <<-EOF
 CREATE DATABASE IF NOT EXISTS $DB_NAME;
 CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
 GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';
 FLUSH PRIVILEGES;
-EXIT;
 EOF
 
 echo "Created database '$DB_NAME' and user '$DB_USER' successfully." > /home/logs/step6.log;
