@@ -32,7 +32,12 @@ install_php() {
         php$PHP_VERSION-mysql \
         libapache2-mod-php$PHP_VERSION
 
-    # Verify installation
+
+    if [ $? -ne 0 ]; then
+        echo "An error occurred while installing PHP $PHP_VERSION and its modules!" >> /home/logs/step1.log
+        exit 1
+    fi
+
     echo "PHP $PHP_VERSION and its modules have been installed successfully!" >> /home/logs/step1.log
     php$PHP_VERSION -v
 }
@@ -60,6 +65,11 @@ reset_php() {
     echo "Removing unnecessary dependencies..." >> /home/logs/step1.log
     apt-get autoremove -y
     apt-get autoclean
+
+    if [ $? -ne 0 ]; then
+        echo "An error occurred while removing PHP $PHP_VERSION and its modules!" >> /home/logs/step1.log
+        exit 1
+    fi
 
     echo "PHP $PHP_VERSION and its modules have been successfully removed!" >> /home/logs/step1.log
 }

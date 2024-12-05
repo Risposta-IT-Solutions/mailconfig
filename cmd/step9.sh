@@ -20,9 +20,19 @@ echo "Enabling Apache site for webmail.$DOMAIN..." >> /home/logs/step9.log
 sudo a2ensite webmail.$DOMAIN
 sudo systemctl reload apache2
 
+if [ $? -ne 0 ]; then
+  echo "An error occurred while enabling the Apache site for webmail.$DOMAIN." >> /home/logs/step9.log
+  exit 1
+fi
+
 # Step 2: Obtain SSL certificate for webmail
 echo "Obtaining SSL certificate for webmail.$DOMAIN..." >> /home/logs/step9.log
 sudo certbot --apache -d webmail.$DOMAIN --non-interactive --agree-tos --email "$PREFIX@$DOMAIN" --no-eff-email
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while obtaining an SSL certificate for webmail.$DOMAIN." >> /home/logs/step9.log
+  exit 1
+fi
 
 # Step 3: Setup Maildir directories
 echo "Setting up Maildir for domain $DOMAIN and prefix $PREFIX..." >> /home/logs/step9.log
@@ -30,7 +40,14 @@ sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
 sudo maildirmake.dovecot /var/mail/vhosts/$DOMAIN/$PREFIX
 sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/$PREFIX
 
+# Create a Maildir for the root user
+
 sudo maildirmake.dovecot /var/mail/vhosts/$DOMAIN/root
 sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/root
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while setting up Maildir for $PREFIX@$DOMAIN." >> /home/logs/step9.log
+  exit 1
+fi
 
 echo "Setup completed for webmail.$DOMAIN and Maildir for $PREFIX@$DOMAIN." >> /home/logs/step9.log

@@ -24,6 +24,11 @@ install_services() {
         $MAILUTILS_PACKAGES \
         $ROUNDCUBE_PACKAGES
 
+    if [ $? -ne 0 ]; then
+        echo "An error occurred while installing OpenDKIM, Certbot, Roundcube, and Mail Utilities!" >> /home/logs/step5.log
+        exit 1
+    fi
+
     # Create vmail group and user
     echo "Creating vmail group and user..." >> /home/logs/step5.log
     groupadd -g 5000 $VMAIL_GROUP
@@ -40,6 +45,10 @@ reset_services() {
         $MAILUTILS_PACKAGES \
         $ROUNDCUBE_PACKAGES
 
+    if [ $? -ne 0 ]; then
+        echo "An error occurred while removing OpenDKIM, Certbot, Roundcube, and Mail Utilities!" >> /home/logs/step5.log
+        exit 1
+    fi
     # Remove vmail group and user
     echo "Removing vmail group and user..." >> /home/logs/step5.log
     userdel -r $VMAIL_USER

@@ -46,23 +46,26 @@ if [ -f "$SRC_CONF_FILE" ]; then
   sudo cp -rf "$SRC_CONF_FILE" "$DEST_CONF_FILE"
 else
   echo "Error: File webmail.{{_domain_}}.conf not found in ./sample/." >> /home/logs/step8.log
+  exit 1
 fi
 
 # Move opendkim.conf to /etc
 if [ -f "./sample/opendkim.conf" ]; then
-  echo "Moving opendkim.conf to /etc..." >> /home/logs/step8.log
+  echo "Copying opendkim.conf to /etc..." >> /home/logs/step8.log
   sudo cp -rf ./sample/opendkim.conf /etc
 else
   echo "Error: File opendkim.conf not found in ./sample/." >> /home/logs/step8.log
+  exit 1
 fi
 
 # Move dovecot, roundcube, and postfix directories to /etc
 for dir in dovecot roundcube postfix; do
   if [ -d "./sample/$dir" ]; then
-    echo "Moving $dir directory to /etc..." >> /home/logs/step8.log
+    echo "Copying $dir directory to /etc..." >> /home/logs/step8.log
     sudo cp -rf ./sample/$dir /etc
   else
     echo "Warning: Directory $dir not found in ./sample/." >> /home/logs/step8.log
+    exit 1
   fi
 done
 

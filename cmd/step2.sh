@@ -25,6 +25,11 @@ install_services() {
         $DOVECOT_PACKAGES \
         $MYSQL_PACKAGE
 
+    if [ $? -ne 0 ]; then
+        echo "An error occurred while installing Postfix, Dovecot, and MySQL!" >> /home/logs/step2.log
+        exit 1
+    fi
+
     echo "Postfix, Dovecot, and MySQL have been installed successfully!" >> /home/logs/step2.log
 }
 
@@ -35,6 +40,11 @@ reset_services() {
         $POSTFIX_PACKAGES \
         $DOVECOT_PACKAGES \
         $MYSQL_PACKAGE
+
+    if [ $? -ne 0 ]; then
+        echo "An error occurred while removing Postfix, Dovecot, and MySQL!" >> /home/logs/step2.log
+        exit 1
+    fi
 
     echo "Removing unnecessary dependencies..." >> /home/logs/step2.log
     apt-get autoremove -y
