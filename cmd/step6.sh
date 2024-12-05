@@ -20,6 +20,8 @@ FLUSH PRIVILEGES;
 EXIT;
 EOF
 
+echo "Created database '$DB_NAME' and user '$DB_USER' successfully." > /home/logs/step6.log;
+
 
 # Step 1: Create directories and generate DKIM keys
 echo "Creating DKIM directories and generating keys for $DOMAIN..." > /home/logs/step6.log
