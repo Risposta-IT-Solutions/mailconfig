@@ -33,7 +33,7 @@ ufw allow 587
 ufw allow 465
 ufw allow ssh
 
-ufw enable
+ufw enable -y
 
 echo "Ufw enabled and ports allowed"
 
