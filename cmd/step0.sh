@@ -37,5 +37,5 @@ ufw enable
 
 echo "Ufw enabled and ports allowed"
 
-#create logs folder 
-mkdir /home/logs
+#create logs folder  if not exist
+[ -d /home/logs ] || mkdir /home/logs
