@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Configuring webmail, SSL, and Maildir for $PREFIX@$DOMAIN..." > /home/step9.log
+echo "Configuring webmail, SSL, and Maildir for $PREFIX@$DOMAIN..." > /home/logs/step9.log
 
 if [ -f /home/config.env ]; then
   source /home/config.env
@@ -16,16 +16,16 @@ if [ -z "$DOMAIN" ] || [ -z "$PREFIX" ]; then
 fi
 
 # Step 1: Enable the Apache site for webmail
-echo "Enabling Apache site for webmail.$DOMAIN..." >> /home/step9.log
+echo "Enabling Apache site for webmail.$DOMAIN..." >> /home/logs/step9.log
 sudo a2ensite webmail.$DOMAIN
 sudo systemctl reload apache2
 
 # Step 2: Obtain SSL certificate for webmail
-echo "Obtaining SSL certificate for webmail.$DOMAIN..." >> /home/step9.log
+echo "Obtaining SSL certificate for webmail.$DOMAIN..." >> /home/logs/step9.log
 sudo certbot --apache -d webmail.$DOMAIN --non-interactive --agree-tos --email "$PREFIX@$DOMAIN" --no-eff-email
 
 # Step 3: Setup Maildir directories
-echo "Setting up Maildir for domain $DOMAIN and prefix $PREFIX..." >> /home/step9.log
+echo "Setting up Maildir for domain $DOMAIN and prefix $PREFIX..." >> /home/logs/step9.log
 sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
 sudo maildirmake.dovecot /var/mail/vhosts/$DOMAIN/$PREFIX
 sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/$PREFIX
@@ -33,4 +33,4 @@ sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/$PREFIX
 sudo maildirmake.dovecot /var/mail/vhosts/$DOMAIN/root
 sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/root
 
-echo "Setup completed for webmail.$DOMAIN and Maildir for $PREFIX@$DOMAIN." >> /home/step9.log
+echo "Setup completed for webmail.$DOMAIN and Maildir for $PREFIX@$DOMAIN." >> /home/logs/step9.log

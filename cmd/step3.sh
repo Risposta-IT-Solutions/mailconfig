@@ -1,12 +1,12 @@
 #!/bin/bash
-echo "Securing MySQL installation..." > /home/step3.log
+echo "Securing MySQL installation..." > /home/logs/step3.log
 # Check if expect is installed
 if ! command -v expect &>/dev/null; then
-  echo "'expect' is not installed. Installing now..." >> /home/step3.log
+  echo "'expect' is not installed. Installing now..." >> /home/logs/step3.log
   if sudo apt update && sudo apt install -y expect; then
-    echo "'expect' installed successfully." >> /home/step3.log
+    echo "'expect' installed successfully." >> /home/logs/step3.log
   else
-    echo "Failed to install 'expect'. Please install it manually and try again." >> /home/step3.log
+    echo "Failed to install 'expect'. Please install it manually and try again." >> /home/logs/step3.log
     exit 1
   fi
 fi
@@ -34,4 +34,4 @@ expect "Reload privilege tables now?" { send "y\r" }
 expect eof
 EOF
 
-echo "MySQL secure installation completed with predefined responses." > /home/step3.log
+echo "MySQL secure installation completed with predefined responses." > /home/logs/step3.log

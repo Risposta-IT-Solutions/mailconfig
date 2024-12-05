@@ -15,41 +15,41 @@ VMAIL_USER="vmail"
 
 # Function to install OpenDKIM, Certbot, Roundcube, and create vmail user/group
 install_services() {
-    echo "Updating package list..." > /home/step5.log
+    echo "Updating package list..." > /home/logs/step5.log
     apt-get update -y
 
-    echo "Installing OpenDKIM, Certbot, Roundcube, and Mail Utilities..." >> /home/step5.log
+    echo "Installing OpenDKIM, Certbot, Roundcube, and Mail Utilities..." >> /home/logs/step5.log
     apt-get install -y \
         $OPEN_DKIM_PACKAGES \
         $MAILUTILS_PACKAGES \
         $ROUNDCUBE_PACKAGES
 
     # Create vmail group and user
-    echo "Creating vmail group and user..." >> /home/step5.log
+    echo "Creating vmail group and user..." >> /home/logs/step5.log
     groupadd -g 5000 $VMAIL_GROUP
     useradd -g $VMAIL_GROUP -u 5000 $VMAIL_USER -d /var/mail
 
-    echo "OpenDKIM, Certbot, Roundcube, and Mail Utilities have been installed successfully!" >> /home/step5.log
+    echo "OpenDKIM, Certbot, Roundcube, and Mail Utilities have been installed successfully!" >> /home/logs/step5.log
 }
 
 # Function to remove OpenDKIM, Certbot, Roundcube, and reset vmail group/user
 reset_services() {
-    echo "Purging OpenDKIM, Certbot, Roundcube, and Mail Utilities..."  > /home/step5.log
+    echo "Purging OpenDKIM, Certbot, Roundcube, and Mail Utilities..."  > /home/logs/step5.log
     apt-get purge -y \
         $OPEN_DKIM_PACKAGES \
         $MAILUTILS_PACKAGES \
         $ROUNDCUBE_PACKAGES
 
     # Remove vmail group and user
-    echo "Removing vmail group and user..." >> /home/step5.log
+    echo "Removing vmail group and user..." >> /home/logs/step5.log
     userdel -r $VMAIL_USER
     groupdel $VMAIL_GROUP
 
-    echo "Removing unnecessary dependencies..." >> /home/step5.log
+    echo "Removing unnecessary dependencies..." >> /home/logs/step5.log
     apt-get autoremove -y
     apt-get autoclean
 
-    echo "OpenDKIM, Certbot, Roundcube, and Mail Utilities have been successfully removed!" >> /home/step5.log
+    echo "OpenDKIM, Certbot, Roundcube, and Mail Utilities have been successfully removed!" >> /home/logs/step5.log
 }
 
 # Check the passed argument (install or reset)

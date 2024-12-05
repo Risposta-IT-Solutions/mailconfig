@@ -36,3 +36,6 @@ ufw allow ssh
 ufw enable
 
 echo "Ufw enabled and ports allowed"
+
+#create logs folder 
+mkdir /home/logs

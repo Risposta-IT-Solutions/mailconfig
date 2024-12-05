@@ -12,4 +12,4 @@ FLUSH PRIVILEGES;
 EXIT;
 EOF
 
-echo "Database '$DB_NAME' and user '$DB_USER' created successfully." > /home/step4.log
+echo "Database '$DB_NAME' and user '$DB_USER' created successfully." > /home/logs/step4.log

@@ -13,34 +13,34 @@ DOVECOT_PACKAGES="dovecot-core dovecot-imapd dovecot-mysql"
 
 # Function to install Postfix, Dovecot, and MySQL
 install_services() {
-    echo "Updating package list..." > /home/step2.log
+    echo "Updating package list..." > /home/logs/step2.log
     apt-get update -y
 
     # Set DEBIAN_FRONTEND to noninteractive to avoid popups
     export DEBIAN_FRONTEND=noninteractive
 
-    echo "Installing Postfix, Dovecot, and MySQL..." >> /home/step2.log
+    echo "Installing Postfix, Dovecot, and MySQL..." >> /home/logs/step2.log
     apt-get install -y \
         $POSTFIX_PACKAGES \
         $DOVECOT_PACKAGES \
         $MYSQL_PACKAGE
 
-    echo "Postfix, Dovecot, and MySQL have been installed successfully!" >> /home/step2.log
+    echo "Postfix, Dovecot, and MySQL have been installed successfully!" >> /home/logs/step2.log
 }
 
 # Function to remove Postfix, Dovecot, and MySQL
 reset_services() {
-    echo "Purging Postfix, Dovecot, and MySQL..." > /home/step2.log
+    echo "Purging Postfix, Dovecot, and MySQL..." > /home/logs/step2.log
     apt-get purge -y \
         $POSTFIX_PACKAGES \
         $DOVECOT_PACKAGES \
         $MYSQL_PACKAGE
 
-    echo "Removing unnecessary dependencies..." >> /home/step2.log
+    echo "Removing unnecessary dependencies..." >> /home/logs/step2.log
     apt-get autoremove -y
     apt-get autoclean
 
-    echo "Postfix, Dovecot, and MySQL have been successfully removed!" >> /home/step2.log
+    echo "Postfix, Dovecot, and MySQL have been successfully removed!" >> /home/logs/step2.log
 }
 
 # Check the passed argument (install or reset)
