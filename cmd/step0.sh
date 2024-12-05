@@ -39,3 +39,6 @@ echo "Ufw enabled and ports allowed"
 
 #create logs folder  if not exist
 [ -d /home/logs ] || mkdir /home/logs
+
+#delete all files in logs folder
+rm -rf /home/logs/*
