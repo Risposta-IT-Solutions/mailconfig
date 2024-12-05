@@ -7,8 +7,6 @@ else
   exit 1
 fi
 
-EMAIL="$PREFIX@$DOMAIN"
-
 # Step 1: Create directories and generate DKIM keys
 echo "Creating DKIM directories and generating keys for $DOMAIN..." > /home/logs/step6.log
 sudo mkdir -p /etc/opendkim/keys/$DOMAIN

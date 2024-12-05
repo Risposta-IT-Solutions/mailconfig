@@ -8,6 +8,8 @@ else
   exit 1
 fi
 
+EMAIL="$PREFIX@$DOMAIN"
+
 cd /home/mailconfig/
 
 if [ -z "$DOMAIN" ]; then
