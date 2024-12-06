@@ -1,40 +1,50 @@
 #!/bin/bash
+echo "Installing Roundcube with predefined inputs" > /home/lgs/step6.log
+# Exit script on any error
+set -e
 
-if [ -f /home/config.env ]; then
-  source /home/config.env
-else
-  echo "Configuration file not found!"
-  exit 1
-fi
+# Set non-interactive frontend for apt
+export DEBIAN_FRONTEND=noninteractive
 
+# Predefine inputs for Roundcube installation
+# Replace the values with your actual database credentials
+DB_ROOT_PASSWORD="Zz9730TH"
 DB_NAME="roundcube"
 DB_USER="roundcube"
 DB_PASSWORD="Zz9730TH"
 
-mysql -u root <<EOF
-CREATE DATABASE IF NOT EXISTS $DB_NAME;
-CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';
-FLUSH PRIVILEGES;
-EXIT;
-EOF
+# Preconfigure MySQL root password to avoid prompts
+echo "mysql-server mysql-server/root_password password $DB_ROOT_PASSWORD" | debconf-set-selections
+echo "mysql-server mysql-server/root_password_again password $DB_ROOT_PASSWORD" | debconf-set-selections
 
+# Preconfigure Roundcube database settings
+echo "roundcube-core roundcube/dbconfig-install boolean true" | debconf-set-selections
+echo "roundcube-core roundcube/mysql/admin-pass password $DB_ROOT_PASSWORD" | debconf-set-selections
+echo "roundcube-core roundcube/mysql/app-pass password $DB_PASSWORD" | debconf-set-selections
+echo "roundcube-core roundcube/app-password-confirm password $DB_PASSWORD" | debconf-set-selections
+echo "roundcube-core roundcube/database-type select mysql" | debconf-set-selections
+echo "roundcube-core roundcube/mysql/admin-user string root" | debconf-set-selections
 
+echo "Predefined inputs configured. Starting installation..." >> /home/lgs/step6.log
 
-echo "Created database '$DB_NAME' and user '$DB_USER' successfully." > /home/logs/step6.log;
+# Update the package list
+apt update -y
 
-
-# Step 1: Create directories and generate DKIM keys
-echo "Creating DKIM directories and generating keys for $DOMAIN..." > /home/logs/step6.log
-sudo mkdir -p /etc/opendkim/keys/$DOMAIN
-cd /etc/opendkim/keys/$DOMAIN
-sudo opendkim-genkey -s mail -d $DOMAIN
+# Install Roundcube and MySQL dependency
+apt install -y roundcube roundcube-mysql
 
 if [ $? -ne 0 ]; then
-  echo "Error generating DKIM keys for $DOMAIN!" >> /home/logs/step6.log
+  echo "Failed to install Roundcube and MySQL dependency" >> /home/lgs/step6.log
   exit 1
-else
-  echo "DKIM keys generated successfully for $DOMAIN" >> /home/logs/step6.log
 fi
 
-echo "Setting permissions for DKIM keys - Done" >> /home/logs/step6.log
+# Restart Apache to apply changes
+systemctl restart apache2
+
+if [ $? -ne 0 ]; then
+  echo "Failed to restart Apache" >> /home/lgs/step6.log
+  exit 1
+fi
+
+# Print success message
+echo "Roundcube installation with predefined inputs completed successfully!" >> /home/lgs/step6.log

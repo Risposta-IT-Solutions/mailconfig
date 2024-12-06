@@ -1,15 +1,21 @@
 #!/bin/bash
 
-DB_NAME="postfix_db"
-DB_USER="postfix_user"
-DB_PASSWORD="Zz9730TH"
+# Log file path
+LOG_FILE="/home/logs/step4.log"
 
+# Creating databases and users
 mysql -u root <<EOF
-CREATE DATABASE IF NOT EXISTS $DB_NAME;
-CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';
+CREATE DATABASE IF NOT EXISTS postfix_db;
+CREATE USER IF NOT EXISTS 'postfix_user'@'localhost' IDENTIFIED BY 'Zz9730TH';
+GRANT ALL PRIVILEGES ON postfix_db.* TO 'postfix_user'@'localhost';
+
+CREATE DATABASE IF NOT EXISTS roundcube;
+CREATE USER IF NOT EXISTS 'roundcube'@'localhost' IDENTIFIED BY 'Zz9730TH';
+GRANT ALL PRIVILEGES ON roundcube.* TO 'roundcube'@'localhost';
+
 FLUSH PRIVILEGES;
-EXIT;
 EOF
 
-echo "Database '$DB_NAME' and user '$DB_USER' created successfully." > /home/logs/step4.log
+# Log success message
+echo "Databases and users created successfully." > "$LOG_FILE"
+

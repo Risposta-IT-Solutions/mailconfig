@@ -9,7 +9,6 @@ fi
 # Parameters for packages and user/group setup
 OPEN_DKIM_PACKAGES="opendkim opendkim-tools"
 MAILUTILS_PACKAGES="mailutils acl ca-certificates certbot python3-certbot-apache"
-ROUNDCUBE_PACKAGES="roundcube roundcube-mysql"
 VMAIL_GROUP="vmail"
 VMAIL_USER="vmail"
 
@@ -22,14 +21,14 @@ install_services() {
     echo "Command: apt-get install -y $OPEN_DKIM_PACKAGES $MAILUTILS_PACKAGES $ROUNDCUBE_PACKAGES" >> /home/logs/step5.log
     apt-get install -y \
         $OPEN_DKIM_PACKAGES \
-        $MAILUTILS_PACKAGES \
-        $ROUNDCUBE_PACKAGES
+        $MAILUTILS_PACKAGES 
 
     if [ $? -ne 0 ]; then
         echo "An error occurred while installing OpenDKIM, Certbot, Roundcube, and Mail Utilities!" >> /home/logs/step5.log
         exit 1
     fi
 
+    
     # Create vmail group and user
     echo "Creating vmail group and user..." >> /home/logs/step5.log
     groupadd -g 5000 $VMAIL_GROUP

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Check if the domain parameter is provided
 if [ -f /home/config.env ]; then
   source /home/config.env
 else
@@ -8,17 +7,34 @@ else
   exit 1
 fi
 
-cd /home/mailconfig/
+DB_NAME="roundcube"
+DB_USER="roundcube"
+DB_PASSWORD="Zz9730TH"
 
-# Define the target directory
-TARGET_DIR="./sample"
+mysql -u root <<EOF
+CREATE DATABASE IF NOT EXISTS $DB_NAME;
+CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
+GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+EOF
 
-# Loop through all files in the target directory and replace the placeholder
-find "$TARGET_DIR" -type f -exec sed -i -e "s/{{_domain_}}/$DOMAIN/g" -e "s/{{_company_}}/$COMPANY/g" {} +
+
+
+echo "Created database '$DB_NAME' and user '$DB_USER' successfully." > /home/logs/step7.log;
+
+
+# Step 1: Create directories and generate DKIM keys
+echo "Creating DKIM directories and generating keys for $DOMAIN..." > /home/logs/step7.log
+sudo mkdir -p /etc/opendkim/keys/$DOMAIN
+cd /etc/opendkim/keys/$DOMAIN
+sudo opendkim-genkey -s mail -d $DOMAIN
 
 if [ $? -ne 0 ]; then
-  echo "An error occurred while replacing placeholders in files in $TARGET_DIR."
+  echo "Error generating DKIM keys for $DOMAIN!" >> /home/logs/step7.log
   exit 1
+else
+  echo "DKIM keys generated successfully for $DOMAIN" >> /home/logs/step7.log
 fi
 
-echo "Replaced {{_domain_}} with $DOMAIN in all files in $TARGET_DIR." > /home/logs/step7.log
+echo "Setting permissions for DKIM keys - Done" >> /home/logs/step7.log
