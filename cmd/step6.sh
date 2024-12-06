@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Installing Roundcube with predefined inputs" > /home/lgs/step6.log
+echo "Installing Roundcube with predefined inputs" > /home/logs/step6.log
 # Exit script on any error
 set -e
 
@@ -25,7 +25,7 @@ echo "roundcube-core roundcube/app-password-confirm password $DB_PASSWORD" | deb
 echo "roundcube-core roundcube/database-type select mysql" | debconf-set-selections
 echo "roundcube-core roundcube/mysql/admin-user string root" | debconf-set-selections
 
-echo "Predefined inputs configured. Starting installation..." >> /home/lgs/step6.log
+echo "Predefined inputs configured. Starting installation..." >> /home/logs/step6.log
 
 # Update the package list
 apt update -y
@@ -34,7 +34,7 @@ apt update -y
 apt install -y roundcube roundcube-mysql
 
 if [ $? -ne 0 ]; then
-  echo "Failed to install Roundcube and MySQL dependency" >> /home/lgs/step6.log
+  echo "Failed to install Roundcube and MySQL dependency" >> /home/logs/step6.log
   exit 1
 fi
 
@@ -42,9 +42,9 @@ fi
 systemctl restart apache2
 
 if [ $? -ne 0 ]; then
-  echo "Failed to restart Apache" >> /home/lgs/step6.log
+  echo "Failed to restart Apache" >> /home/logs/step6.log
   exit 1
 fi
 
 # Print success message
-echo "Roundcube installation with predefined inputs completed successfully!" >> /home/lgs/step6.log
+echo "Roundcube installation with predefined inputs completed successfully!" >> /home/logs/step6.log
