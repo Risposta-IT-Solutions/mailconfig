@@ -34,4 +34,9 @@ expect "Reload privilege tables now?" { send "y\r" }
 expect eof
 EOF
 
+if [ $? -ne 0 ]; then
+  echo "Failed to secure MySQL installation." >> /home/logs/step3.log
+  exit 1
+fi
+
 echo "MySQL secure installation completed with predefined responses." > /home/logs/step3.log
