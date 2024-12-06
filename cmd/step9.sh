@@ -10,6 +10,8 @@ fi
 
 EMAIL="$PREFIX@$DOMAIN"
 
+DB_PASSWORD="Zz9730TH"
+
 cd /home/mailconfig/
 
 if [ -z "$DOMAIN" ]; then
@@ -27,7 +29,7 @@ fi
 SQL_FILE="./sample/postfix_db.sql"
 if [ -f "$SQL_FILE" ]; then
   echo "Executing postfix_db.sql with MySQL..." >> /home/logs/step9.log
-  mysql -u root postfix_db< "$SQL_FILE"
+  mysql -u root -p "$DB_PASSWORD" postfix_db< "$SQL_FILE"
   if [ $? -eq 0 ]; then
     echo "Database initialized successfully."  >> /home/logs/step9.log
   else
