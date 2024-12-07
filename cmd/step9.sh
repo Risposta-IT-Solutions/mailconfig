@@ -87,19 +87,5 @@ done
 
 echo "Configuration files copied to /etc." >> /home/logs/step9.log
 
-echo "Obtaining SSL certificates for mail services..." >> /home/logs/step9.log
 
-echo "Command: sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email" >> /home/logs/step9.log
-
-sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --non-interactive --agree-tos --email $EMAIL --no-eff-email
-
-if [ $? -ne 0 ]; then
-  echo "Error obtaining SSL certificates for mail services!" >> /home/logs/step9.log
-  exit 1
-else
-  echo "SSL certificates obtained successfully for: mail.$DOMAIN, smtp.$DOMAIN and imap.$DOMAIN" >> /home/logs/step9.log
-fi
-
-
-echo "DKIM keys generated and SSL certificates obtained for $DOMAIN with email $EMAIL." >> /home/logs/step9.log
 
