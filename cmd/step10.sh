@@ -34,7 +34,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN--email "$PREFIX@$DOMAIN" --agree-tos --non-interactive
+sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --email "$PREFIX@$DOMAIN" --agree-tos --non-interactive
 
 if [[ $? -eq 0 ]]; then
     echo "Certificate successfully created for domains mail.$DOMAIN, smtp.$DOMAIN, imap.$DOMAIN."
