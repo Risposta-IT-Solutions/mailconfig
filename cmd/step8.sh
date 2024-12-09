@@ -14,7 +14,11 @@ cd /home/mailconfig/
 TARGET_DIR="./sample"
 
 # Loop through all files in the target directory and replace the placeholder
-find "$TARGET_DIR" -type f -exec sed -i -e "s/{{_domain_}}/$DOMAIN/g" -e "s/{{_company_}}/$COMPANY/g" {} +
+find "$TARGET_DIR" -type f -exec sed -i \
+    -e "s/{{_domain_}}/$DOMAIN/g" \
+    -e "s/{{_company_}}/$COMPANY/g" \
+    -e "s/{{_prefix_}}/$PREFIX/g" {} +
+
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while replacing placeholders in files in $TARGET_DIR."
