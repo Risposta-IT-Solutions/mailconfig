@@ -1,13 +1,39 @@
 source /home/config.env
 
-sudo apt install -y postfix postfix-mysql
+#!/bin/bash
+
+# Preconfigure the Postfix options
+echo "postfix postfix/main_mailer_type select Internet Site" | sudo debconf-set-selections
+echo "postfix postfix/mailname string $(hostname -f)" | sudo debconf-set-selections
+
+# Update package lists
+sudo apt update
+
+# Install Postfix and postfix-mysql without prompts
+sudo DEBIAN_FRONTEND=noninteractive apt install -y postfix postfix-mysql
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while installing Postfix!" >> $LOG_FILE
   exit 1
 fi
 
-echo "Postfix has been installed successfully!" >> $LOG_FILE
+# Restart Postfix to apply changes
+sudo systemctl restart postfix
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while restarting Postfix!" >> $LOG_FILE
+  exit 1
+fi
+
+# Enable Postfix to start on boot
+sudo systemctl enable postfix
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while enabling Postfix to start on boot!" >> $LOG_FILE
+  exit 1
+fi
+
+echo "Postfix with postfix-mysql installed and configured as 'Internet Site'." >> $LOG_FILE
 
 apt install -y dovecot-core dovecot-imapd dovecot-mysql
 
