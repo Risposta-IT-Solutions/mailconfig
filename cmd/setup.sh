@@ -148,10 +148,12 @@ fi
 echo "The vmail user has been created successfully!" >> $LOG_FILE
 
 #rename the default configuration file
-cd /home/mailconfig/
+cd /home/mailconfig/ || { echo "Directory '/home/mailconfig/' not found"; exit 1; }
 
 # Define the target directory
 TARGET_DIR="./sample"
+
+echo "Replacing placeholders in all files in $TARGET_DIR..." >> $LOG_FILE
 
 # Loop through all files in the target directory and replace the placeholder
 find "$TARGET_DIR" -type f -exec sed -i \
