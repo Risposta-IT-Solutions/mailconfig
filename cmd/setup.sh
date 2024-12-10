@@ -177,7 +177,7 @@ fi
 echo "The DKIM directory has been created successfully!" >> $LOG_FILE
 
 
-cd /etc/opendkim/keys/$DOMAIN && sudo opendkim-genkey -s mail -d bluehawkcreative.co.uk
+cd /etc/opendkim/keys/$DOMAIN && sudo opendkim-genkey -s mail -d $DOMAIN.co.uk
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while generating the DKIM keys!" >> $LOG_FILE
@@ -196,7 +196,7 @@ fi
 
 echo "SSL certificate obtained successfully for mail.$DOMAIN, smtp.$DOMAIN, and imap.$DOMAIN." >> $LOG_FILE
 
-a2ensite webmail.bluehawkcreative.co.uk
+a2ensite webmail.$DOMAIN.co.uk
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while enabling the Apache site for webmail.$DOMAIN." >> $LOG_FILE
@@ -222,12 +222,6 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "SSL certificate obtained successfully for webmail.$DOMAIN." >> $LOG_FILE
-
-# sudo mkdir -p /var/mail/vhosts/bluehawkcreative.co.uk/paul
-# sudo maildirmake.dovecot /var/mail/vhosts/bluehawkcreative.co.uk/paul
-# sudo chown -R vmail:vmail /var/mail/vhosts/bluehawkcreative.co.uk/paul
-# sudo maildirmake.dovecot /var/mail/vhosts/bluehawkcreative.co.uk/root
-# sudo chown -R vmail:vmail /var/mail/vhosts/bluehawkcreative.co.uk/root
 
 sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
 
