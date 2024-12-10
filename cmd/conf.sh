@@ -25,13 +25,13 @@ cat $CONF_FILE
 
 
 #allow ports
-ufw allow http
-ufw allow https
-ufw allow smtp
-ufw allow imaps
-ufw allow 587
-ufw allow 465
-ufw allow ssh
+ufw allow http > /dev/null 2>&1
+ufw allow https > /dev/null 2>&1
+ufw allow smtp > /dev/null 2>&1
+ufw allow imaps > /dev/null 2>&1
+ufw allow 587 > /dev/null 2>&1
+ufw allow 465 > /dev/null 2>&1
+ufw allow ssh > /dev/null 2>&1
 
 ufw --force enable
 
