@@ -1,0 +1,117 @@
+#!/bin/bash
+
+# Variables
+REMOTE_IP=$ip  
+REMOTE_USER="root"
+REMOTE_PASS="Zz9730TH"
+
+DOMAIN=$domain
+COMPANY=$company
+PREFIX=$prefix
+
+echo "ip: $REMOTE_IP, domain: $DOMAIN, prefix: $PREFIX, company: $COMPANY"
+
+ssh-keygen -f "/var/lib/jenkins/.ssh/known_hosts" -R "$REMOTE_IP"
+
+REMOTE_CMD="
+echo 'Connected to \$(hostname)' && uname -a;
+
+# Logging the Jenkins connection
+cd /home && echo \"logged in via Jenkins at \$(date)\" > jenkins.log;
+
+LOCK_FILE='/var/lib/dpkg/lock-frontend'
+
+# Function to kill the process holding the lock
+release_lock() {
+  # Get the PID of the process holding the lock
+  LOCK_PID=\$(lsof \"\$LOCK_FILE\" 2>/dev/null | awk 'NR==2 {print \$2}')
+  if [ -n \"\$LOCK_PID\" ]; then
+    echo \"Process \$LOCK_PID is holding the lock. Killing it...\"
+    kill -9 \$LOCK_PID
+    if [ \$? -eq 0 ]; then
+      echo \"Successfully killed process \$LOCK_PID.\"
+      sudo dpkg --configure -a
+    else
+      echo \"Failed to kill process \$LOCK_PID. Exiting.\"
+      exit 1
+    fi
+    check_lock
+  else
+    echo \"No process is holding the lock.\"
+    sudo dpkg --configure -a
+  fi
+}
+
+check_lock() {
+  echo 'checking lock file'
+  if [ -f \"\$LOCK_FILE\" ]; then
+    echo \"Lock file detected: \$LOCK_FILE\"
+    release_lock
+  else
+    echo \"No lock file detected.\"
+  fi
+}
+
+check_lock
+
+# Install necessary packages
+sudo apt install -y ca-certificates &&
+sudo update-ca-certificates &&
+sudo apt update
+
+if ! command -v git &> /dev/null; then
+	sudo apt-get install -y git;
+else 
+	echo 'git is already istalled'
+fi
+
+# Configure Git
+git config --global http.sslVerify false;
+
+# Clone or update the mailconfig repository
+if [ -d \"/home/mailconfig\" ]; then
+	cd /home/mailconfig && git pull || { echo 'Failed to change directory to /home/mailconfig or Git pull was not successful!'; exit 1; }
+else
+    git clone 'https://github.com/Risposta-IT-Solutions/mailconfig.git' /home/mailconfig || { echo 'Git clone failed!'; exit 1; }
+fi
+
+echo 'Pulled files from repo'
+
+# Set permissions and execute the initial script
+cd /home/mailconfig && chmod +x cmd/*.sh && ./cmd/step0.sh \"$DOMAIN\" \"$PREFIX\" \"$COMPANY\"
+if [[ \$? -ne 0 ]]; then
+  echo 'configuration failed, exiting.'
+  exit 1
+else
+  echo \"\$(date) - Config Saved\" >> /home/jenkins.log
+fi
+
+# Execute step scripts in sequence
+nohup bash -c '
+for i in {1..11}; do
+  echo \"Starting step\${i}\"
+  cd /home/mailconfig && bash ./cmd/step\${i}.sh;
+  if [[ \$? -eq 0 ]]; then
+    echo \"\$(date) - Executed step\${i}\" >> /home/jenkins.log;
+  else
+    echo \"step\${i} failed\" >> /home/jenkins.log;
+    exit 1;
+  fi;
+done
+' > /home/mailconfig/process.log 2>&1 &
+disown
+
+tail -f /home/jenkins.log | while read -r line; do
+  echo \"\$line\"
+  if echo \"\$line\" | grep -Eq \"step11|failed\"; then
+    break
+    if echo \"\$line\" | grep -Eq \"failed\"; then
+    	exit 1;
+    fi
+  fi
+done
+"
+
+echo "Connecting SSH"
+
+sshpass -p "$REMOTE_PASS" ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_IP "export DOMAIN='$DOMAIN'; export COMPANY='$COMPANY'; export PREFIX='$PREFIX'; $REMOTE_CMD"
