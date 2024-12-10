@@ -176,6 +176,51 @@ fi
 
 echo "Replaced placeholders in all files in $TARGET_DIR." >> $LOG_FILE
 
+SRC_CONF_FILE="./sample/webmail.{{_domain_}}.conf"
+DEST_CONF_FILE="/etc/apache2/sites-available/webmail.$DOMAIN.conf"
+
+SRC_DEF_VHOST_FILE="./sample/000-default.conf"
+DEF_VHOST_FILE="/etc/apache2/sites-available/000-default.conf"
+
+
+if [ -f "$SRC_CONF_FILE" ]; then
+  echo "Renaming and moving webmail.{{_domain_}}.conf to webmail.$DOMAIN.conf..." >> $LOG_FILE
+  sudo cp -rf "$SRC_CONF_FILE" "$DEST_CONF_FILE"
+else
+  echo "Error: File webmail.{{_domain_}}.conf not found in ./sample/." >> $LOG_FILE
+  exit 1
+fi
+
+if [ -f "$SRC_DEF_VHOST_FILE" ]; then
+  echo "Renaming and moving 000-default.conf" >> $LOG_FILE
+  sudo cp -rf "$SRC_DEF_VHOST_FILE" "$DEF_VHOST_FILE"
+else
+  echo "Error: File 000-default.conf not found in ./sample/." >> $LOG_FILE
+  exit 1
+fi
+
+# Move opendkim.conf to /etc
+if [ -f "./sample/opendkim.conf" ]; then
+  echo "Copying opendkim.conf to /etc..." >> $LOG_FILE
+  sudo cp -rf ./sample/opendkim.conf /etc
+else
+  echo "Error: File opendkim.conf not found in ./sample/." >> $LOG_FILE
+  exit 1
+fi
+
+# Move dovecot, roundcube, and postfix directories to /etc
+for dir in dovecot roundcube postfix; do
+  if [ -d "./sample/$dir" ]; then
+    echo "Copying $dir directory to /etc..." >> $LOG_FILE
+    sudo cp -rf ./sample/$dir /etc
+  else
+    echo "Warning: Directory $dir not found in ./sample/." >> $LOG_FILE
+    exit 1
+  fi
+done
+
+echo "Configuration files copied to /etc." >>  $LOG_FILE
+
 sudo mkdir -p /etc/opendkim/keys/$DOMAIN
 
 if [ $? -ne 0 ]; then
