@@ -187,7 +187,7 @@ fi
 echo "The DKIM keys have been generated successfully!" >> $LOG_FILE
 
 
-sudo certbot --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --email "$PREFIX@$DOMAIN" --agree-tos --non-interactive
+sudo certbot certonly --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --email "$PREFIX@$DOMAIN" --agree-tos --non-interactive
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while obtaining an SSL certificate for mail.$DOMAIN, smtp.$DOMAIN, and imap.$DOMAIN." >> $LOG_FILE
