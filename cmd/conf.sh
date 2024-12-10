@@ -20,7 +20,7 @@ echo "COMPANY='$COMPANY'" >> $CONF_FILE
 echo "LOG_FILE='$LOG_FILE'" >> $CONF_FILE
 
 # Print a success message
-echo "Configuration file '$CONF_FILE' created" >> $LOG_FILE
+echo "Configuration file '$CONF_FILE' created" > $LOG_FILE
 cat $CONF_FILE
 
 
@@ -37,6 +37,6 @@ ufw --force enable
 
 echo "Ufw enabled and ports allowed" >> $LOG_FILE
 
-sudo apt-get update -y
+sudo apt-get update -y > /dev/null 2>&1
 
 echo "System updated"

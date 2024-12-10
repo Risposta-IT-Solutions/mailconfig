@@ -7,7 +7,7 @@ echo "postfix postfix/main_mailer_type select Internet Site" | sudo debconf-set-
 echo "postfix postfix/mailname string $(hostname -f)" | sudo debconf-set-selections
 
 # Update package lists
-sudo apt update
+sudo apt-get update -y > /dev/null 2>&1
 
 # Install Postfix and postfix-mysql without prompts
 sudo DEBIAN_FRONTEND=noninteractive apt install -y postfix postfix-mysql
