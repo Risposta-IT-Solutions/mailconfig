@@ -46,7 +46,7 @@ fi
 
 echo "Mailutils has been installed successfully!" >> $LOG_FILE
 
-apt-get insttall -y php8.1 php8.1-common php8.1-cli php8.1-fpm php8.1-mbstring php8.1-xml php8.1-curl php8.1-zip php8.1-gd php8.1-intl php8.1-soap php8.1-opcache php8.1-readline php8.1-mysql ca-certificates certbot python3-certbot-apache opendkim opendkim-tools libapache2-mod-php
+apt-get install -y php8.1 php8.1-common php8.1-cli php8.1-fpm php8.1-mbstring php8.1-xml php8.1-curl php8.1-zip php8.1-gd php8.1-intl php8.1-soap php8.1-opcache php8.1-readline php8.1-mysql ca-certificates certbot python3-certbot-apache opendkim opendkim-tools libapache2-mod-php
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while installing PHP!" >> $LOG_FILE
