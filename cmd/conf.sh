@@ -17,7 +17,7 @@ LOG_FILE="/home/jenkins.log"
 echo "DOMAIN=$DOMAIN" > $CONF_FILE
 echo "PREFIX=$PREFIX" >> $CONF_FILE
 echo "COMPANY='$COMPANY'" >> $CONF_FILE
-echo "LOG_FILE='$LOG_FILE'" >> $LOG_FILE
+echo "LOG_FILE='$LOG_FILE'" >> $CONF_FILE
 
 # Print a success message
 echo "Configuration file '$CONF_FILE' created with the following content:"
