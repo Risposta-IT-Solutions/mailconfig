@@ -129,23 +129,30 @@ fi
 # Print success message
 echo "Roundcube installation with predefined inputs completed successfully!" >> $LOG_FILE
 
-sudo groupadd -g 5000 vmail
+#if not exist groupadd vmail
 
-if [ $? -ne 0 ]; then
-  echo "An error occurred while creating the vmail group!" >> $LOG_FILE
-  exit 1
+if ! getent group vmail > /dev/null 2>&1; then
+  sudo groupadd -g 5000 vmail
+  if [ $? -ne 0 ]; then
+    echo "An error occurred while creating the vmail group!" >> $LOG_FILE
+    exit 1
+  fi
+  echo "The vmail group has been created successfully!" >> $LOG_FILE
+else
+  echo "The vmail group already exists." >> $LOG_FILE
 fi
 
-echo "The vmail group has been created successfully!" >> $LOG_FILE
-
-sudo useradd -g vmail -u 5000 vmail -d /var/mail
-
-if [ $? -ne 0 ]; then
-  echo "An error occurred while creating the vmail user!" >> $LOG_FILE
-  exit 1
+# Create the vmail user if it does not exist
+if getent passwd vmail > /dev/null 2>&1; then
+  echo "The vmail user already exists." >> $LOG_FILE
+else
+  sudo useradd -g vmail -u 5000 vmail -d /var/mail
+  if [ $? -ne 0 ]; then
+    echo "An error occurred while creating the vmail user!" >> $LOG_FILE
+    exit 1
+  fi
+  echo "The vmail user has been created successfully!" >> $LOG_FILE
 fi
-
-echo "The vmail user has been created successfully!" >> $LOG_FILE
 
 #rename the default configuration file
 cd /home/mailconfig/ || { echo "Directory '/home/mailconfig/' not found"; exit 1; }
