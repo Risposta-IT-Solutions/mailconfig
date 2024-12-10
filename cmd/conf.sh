@@ -20,7 +20,7 @@ echo "COMPANY='$COMPANY'" >> $CONF_FILE
 echo "LOG_FILE='$LOG_FILE'" >> $CONF_FILE
 
 # Print a success message
-echo "Configuration file '$CONF_FILE' created with the following content:"
+echo "Configuration file '$CONF_FILE' created" >> $LOG_FILE
 cat $CONF_FILE
 
 
@@ -35,7 +35,7 @@ ufw allow ssh
 
 ufw --force enable
 
-echo "Ufw enabled and ports allowed"
+echo "Ufw enabled and ports allowed" >> $LOG_FILE
 
 #create logs folder  if not exist
 [ -d /home/logs ] || mkdir /home/logs

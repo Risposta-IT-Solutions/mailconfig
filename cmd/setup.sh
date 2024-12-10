@@ -348,3 +348,5 @@ fi
 echo "Permissions changed successfully for Dovecot logs." >> $LOG_FILE
 
 echo "Setup completed successfully!" >> $LOG_FILE
+
+exit 0
