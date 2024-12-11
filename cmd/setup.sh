@@ -240,6 +240,15 @@ fi
 
 echo "The DKIM keys have been generated successfully!" >> $LOG_FILE
 
+a2ensite webmail.$DOMAIN.co.uk
+
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while enabling the Apache site for webmail.$DOMAIN." >> $LOG_FILE
+  exit 1
+fi
+
+echo "Apache site enabled successfully for webmail.$DOMAIN." >> $LOG_FILE
 
 sudo certbot certonly --apache -d mail.$DOMAIN -d smtp.$DOMAIN -d imap.$DOMAIN --email "$PREFIX@$DOMAIN" --agree-tos --non-interactive
 
@@ -250,14 +259,6 @@ fi
 
 echo "SSL certificate obtained successfully for mail.$DOMAIN, smtp.$DOMAIN, and imap.$DOMAIN." >> $LOG_FILE
 
-a2ensite webmail.$DOMAIN.co.uk
-
-if [ $? -ne 0 ]; then
-  echo "An error occurred while enabling the Apache site for webmail.$DOMAIN." >> $LOG_FILE
-  exit 1
-fi
-
-echo "Apache site enabled successfully for webmail.$DOMAIN." >> $LOG_FILE
 
 systemctl reload apache2
 
