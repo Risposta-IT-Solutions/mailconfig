@@ -182,12 +182,22 @@ DEST_CONF_FILE="/etc/apache2/sites-available/webmail.$DOMAIN.conf"
 SRC_DEF_VHOST_FILE="./sample/000-default.conf"
 DEF_VHOST_FILE="/etc/apache2/sites-available/000-default.conf"
 
+SITE_CONF_FILE="/etc/apache2/sites-available/$DOMAIN.conf"
+SITE_CONF_SRC="./sample/$DOMAIN.conf"
 
 if [ -f "$SRC_CONF_FILE" ]; then
   echo "Renaming and moving webmail.{{_domain_}}.conf to webmail.$DOMAIN.conf..." >> $LOG_FILE
   sudo cp -rf "$SRC_CONF_FILE" "$DEST_CONF_FILE"
 else
   echo "Error: File webmail.{{_domain_}}.conf not found in ./sample/." >> $LOG_FILE
+  exit 1
+fi
+
+if [ -f "$SITE_CONF_SRC" ]; then
+  echo "Renaming and moving $DOMAIN.conf to /etc/apache2/sites-available..." >> $LOG_FILE
+  sudo cp -rf "$SITE_CONF_SRC" "$SITE_CONF_FILE"
+else
+  echo "Error: File $DOMAIN.conf not found in ./sample/." >> $LOG_FILE
   exit 1
 fi
 
@@ -400,6 +410,66 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Permissions changed successfully for Dovecot logs." >> $LOG_FILE
+
+
+cd /var/www/ || { echo "Directory '/var/www/' not found"; exit 1; }
+
+git clone https://github.com/dawn-risposta/phpemailer.git mailer || { echo "Failed to clone the phpmailer repository"; exit 1; }
+
+cd mailer/ || { echo "Directory 'mailer/' not found"; exit 1; }
+
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y composer
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while installing Composer!" >> $LOG_FILE
+  exit 1
+fi
+
+echo "Composer installed successfully!" >> $LOG_FILE
+
+composer install --no-interaction --quiet
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while installing the PHPMailer dependencies!" >> $LOG_FILE
+  exit 1
+fi
+
+echo "PHPMailer dependencies installed successfully!" >> $LOG_FILE
+
+a2ensite $DOMAIN.conf  > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while enabling the Apache site for $DOMAIN." >> $LOG_FILE
+  exit 1
+fi
+
+echo "Apache site enabled successfully for $DOMAIN." >> $LOG_FILE
+
+systemctl reload apache2 > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while reloading Apache!" >> $LOG_FILE
+  exit 1
+fi
+
+sudo certbot --apache -d covertradeukinsurance.co.uk --non-interactive --agree-tos
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while obtaining an SSL certificate for $DOMAIN." >> $LOG_FILE
+  exit 1
+fi
+
+echo "SSL certificate obtained successfully for $DOMAIN." >> $LOG_FILE
+
+systemctl reload apache2 > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while reloading Apache!" >> $LOG_FILE
+  exit 1
+fi
+
+echo "Apache reloaded successfully!" >> $LOG_FILE
+
 
 echo "Setup completed successfully!" >> $LOG_FILE
 
