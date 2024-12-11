@@ -452,7 +452,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-sudo certbot --apache -d covertradeukinsurance.co.uk --non-interactive --agree-tos
+sudo certbot --apache -d $DOMAIN --non-interactive --agree-tos
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while obtaining an SSL certificate for $DOMAIN." >> $LOG_FILE
