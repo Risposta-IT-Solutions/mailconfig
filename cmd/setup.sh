@@ -231,7 +231,7 @@ fi
 echo "The DKIM directory has been created successfully!" >> $LOG_FILE
 
 
-cd /etc/opendkim/keys/$DOMAIN && sudo opendkim-genkey -s mail -d $DOMAIN.co.uk
+cd /etc/opendkim/keys/$DOMAIN && sudo opendkim-genkey -s mail -d $DOMAIN
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while generating the DKIM keys!" >> $LOG_FILE
@@ -240,8 +240,7 @@ fi
 
 echo "The DKIM keys have been generated successfully!" >> $LOG_FILE
 
-a2ensite webmail.$DOMAIN.co.uk
-
+a2ensite webmail.$DOMAIN
 
 if [ $? -ne 0 ]; then
   echo "An error occurred while enabling the Apache site for webmail.$DOMAIN." >> $LOG_FILE
