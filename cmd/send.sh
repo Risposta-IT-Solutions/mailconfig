@@ -7,13 +7,6 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-# Check if IP and DOMAIN variables are set
-if [ -z "$IP" ] || [ -z "$DOMAIN" ]; then
-    echo "Error: IP or DOMAIN is not set in /home/config.env"
-    exit 1
-fi
-
-
 if [ "$ENVIRONMENT" == "production" ]; then
     URL="https://api.pay-per-lead.co.uk/EmailConfig/log"
 else
