@@ -1,6 +1,5 @@
-source /home/config.env
-
 #!/bin/bash
+source /home/config.env
 
 # Preconfigure the Postfix options
 echo "postfix postfix/main_mailer_type select Internet Site" | sudo debconf-set-selections
