@@ -469,9 +469,6 @@ fi
 
 echo "Apache reloaded successfully!" >> $LOG_FILE
 
-
 echo "Setup completed successfully!" >> $LOG_FILE
-
-./send.sh "Setup completed successfully!"
 
 exit 0
