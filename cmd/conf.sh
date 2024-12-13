@@ -2,7 +2,7 @@
 
 # Check if the required parameters are provided
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-  echo "Usage: $0 <domain> <prefix> <company>"
+  echo "Usage: $0 <domain> <prefix> <company> <environment>"
   exit 1
 fi
 
@@ -10,6 +10,7 @@ fi
 DOMAIN="$1"
 PREFIX="$2"
 COMPANY="$3"
+ENVIRONMENT="$4"
 CONF_FILE="/home/config.env"
 LOG_FILE="/home/jenkins.log"
 
@@ -18,6 +19,7 @@ echo "DOMAIN=$DOMAIN" > $CONF_FILE
 echo "PREFIX=$PREFIX" >> $CONF_FILE
 echo "COMPANY='$COMPANY'" >> $CONF_FILE
 echo "LOG_FILE='$LOG_FILE'" >> $CONF_FILE
+echo "ENVIRONMENT='$ENVIRONMENT'" >> $CONF_FILE
 
 # Print a success message
 echo "Configuration file '$CONF_FILE' created" > $LOG_FILE

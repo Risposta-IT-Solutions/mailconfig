@@ -13,7 +13,12 @@ if [ -z "$IP" ] || [ -z "$DOMAIN" ]; then
     exit 1
 fi
 
-URL="https://api.pay-per-lead.co.uk/EmailConfig/log"
+
+if [ "$ENVIRONMENT" == "production" ]; then
+    URL="https://api.pay-per-lead.co.uk/EmailConfig/log"
+else
+    URL="https://beta.api.pay-per-lead.co.uk/EmailConfig/log"
+fi
 
 # Escape special characters in the message
 escaped_message=$(printf '%s' "$1" | jq -R .)
