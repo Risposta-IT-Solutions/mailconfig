@@ -182,7 +182,7 @@ SRC_DEF_VHOST_FILE="./sample/000-default.conf"
 DEF_VHOST_FILE="/etc/apache2/sites-available/000-default.conf"
 
 SITE_CONF_FILE="/etc/apache2/sites-available/$DOMAIN.conf"
-SITE_CONF_SRC="./sample/$DOMAIN.conf"
+SITE_CONF_SRC="./sample/{{_domain_}}.conf"
 
 if [ -f "$SRC_CONF_FILE" ]; then
   echo "Renaming and moving webmail.{{_domain_}}.conf to webmail.$DOMAIN.conf..." >> $LOG_FILE
