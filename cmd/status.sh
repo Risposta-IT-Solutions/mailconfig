@@ -3,14 +3,14 @@ source /home/config.env
 
 # Check if a message is provided
 if [ -z "$1" ]; then
-    echo "Error: No message provided"
+    echo "Error: No status provided"
     exit 1
 fi
 
 if [ "$ENVIRONMENT" == "production" ]; then
-    URL="https://api.pay-per-lead.co.uk/mailConfig/log"
+    URL="https://api.pay-per-lead.co.uk/mailConfig/updateStatus"
 else
-    URL="https://beta.api.pay-per-lead.co.uk/mailConfig/log"
+    URL="https://beta.api.pay-per-lead.co.uk/mailConfig/updateStatus"
 fi
 
 if ! command -v jq > /dev/null 2>&1; then
@@ -30,7 +30,7 @@ escaped_message=$(printf '%s' "$1" | jq -R .)
 DATA=$(jq -n \
     --arg ip "$IP" \
     --arg domain "$DOMAIN" \
-    --arg message "$escaped_message" \
+    --arg status "$escaped_message" \
     '{"ip": $ip, "domain": $domain, "message": $message}')
 
 # Send POST request
@@ -40,9 +40,9 @@ response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
 
 # Check the HTTP status code
 if [ "$response" -eq 200 ]; then
-    echo "Log request successful"
+    echo "Status update request successful"
     exit 0
 else
-    echo "Log request failed with status code $response"
+    echo "Status update request failed with status code $response"
     exit 1
 fi
