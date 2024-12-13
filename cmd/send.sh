@@ -18,6 +18,10 @@ if ! command -v jq > /dev/null 2>&1; then
   sudo apt update && sudo apt install -y jq
 fi
 
+if ! command -v curl > /dev/null 2>&1; then
+  echo "curl not found. Installing curl..."
+  sudo apt update && sudo apt install -y curl
+fi
 
 # Escape special characters in the message
 escaped_message=$(printf '%s' "$1" | jq -R .)
