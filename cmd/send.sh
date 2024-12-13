@@ -13,6 +13,12 @@ else
     URL="https://beta.api.pay-per-lead.co.uk/EmailConfig/log"
 fi
 
+if ! command -v jq > /dev/null 2>&1; then
+  echo "jq not found. Installing jq..."
+  sudo apt update && sudo apt install -y jq
+fi
+
+
 # Escape special characters in the message
 escaped_message=$(printf '%s' "$1" | jq -R .)
 
