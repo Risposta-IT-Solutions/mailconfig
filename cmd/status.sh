@@ -1,7 +1,7 @@
 #!/bin/bash
 source /home/config.env
 
-# Check if a message is provided
+# Check if a status is provided
 if [ -z "$1" ]; then
     echo "Error: No status provided"
     exit 1
@@ -31,7 +31,7 @@ DATA=$(jq -n \
     --arg ip "$IP" \
     --arg domain "$DOMAIN" \
     --arg status "$escaped_message" \
-    '{"ip": $ip, "domain": $domain, "message": $message}')
+    '{"ip": $ip, "domain": $domain, "status": $status}')
 
 # Send POST request
 response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
