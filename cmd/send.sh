@@ -8,9 +8,9 @@ if [ -z "$1" ]; then
 fi
 
 if [ "$ENVIRONMENT" == "production" ]; then
-    URL="https://api.pay-per-lead.co.uk/EmailConfig/log"
+    URL="https://api.pay-per-lead.co.uk/mailConfig/log"
 else
-    URL="https://beta.api.pay-per-lead.co.uk/EmailConfig/log"
+    URL="https://beta.api.pay-per-lead.co.uk/mailConfig/log"
 fi
 
 if ! command -v jq > /dev/null 2>&1; then
