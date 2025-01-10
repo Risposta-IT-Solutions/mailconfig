@@ -36,6 +36,9 @@ fi
 # Escape special characters in the message
 escaped_message=$(printf '%s' "$1" | jq -R .)
 
+# Get optional argument field, default to "server"
+field=${2:-"server"}
+
 # Build JSON data
 DATA=$(jq -n \
     --arg ip "$IP" \
