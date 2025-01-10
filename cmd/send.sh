@@ -2,10 +2,8 @@
 
 
 if [[ ! -f "/home/config.env" ]]; then
-    LOG_FILE="/home/jenkins.log"
-    echo "Server configuration file not found. Skipping log request..." >> $LOG_FILE
+    echo "Error: Configuration file not found - Skipping log request"
 else 
-
     source /home/config.env
 
     # Check if a message is provided
