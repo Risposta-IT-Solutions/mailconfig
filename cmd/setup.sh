@@ -469,6 +469,11 @@ fi
 
 echo "Apache reloaded successfully!" >> $LOG_FILE
 
+# execute /home/mailconfig/cmd/ipv6.sh
+
+cd /home/mailconfig/cmd/ && ./ipv6.sh || { echo "Failed to execute ipv6.sh"; exit 1; }
+
+
 echo "Setup completed successfully!" >> $LOG_FILE
 
 exit 0
