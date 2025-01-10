@@ -50,7 +50,7 @@ response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
 
 # Check the HTTP status code
 if [ "$response" -eq 200 ]; then
-    echo "Status update request successful"
+    echo "Status update request successful [ $URL ]"
     exit 0
 else
     echo "Status update request failed with status code $response"

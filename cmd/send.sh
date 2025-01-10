@@ -52,7 +52,7 @@ response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
 
 # Check the HTTP status code
 if [ "$response" -eq 200 ]; then
-    echo "Log request successful"
+    echo "Log request successful [ $URL ]"
     exit 0
 else
     echo "Log request failed with status code $response"
