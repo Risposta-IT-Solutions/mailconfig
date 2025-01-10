@@ -1,13 +1,8 @@
 #!/bin/bash
 
 # Check if the configuration file exists
-if [[ ! -f /home/config.env ]]; then
-    LOG_FILE="/home/jenkins.log"
-else
-    # Source the configuration file
-    source /home/config.env
-fi
 
+LOG_FILE="/home/jenkins.log"
 
 # Check if IPv6 is enabled
 ipv6_status=$(sysctl net.ipv6.conf.all.disable_ipv6 | awk '{print $3}')
