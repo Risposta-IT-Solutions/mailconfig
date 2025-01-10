@@ -10,7 +10,7 @@ fi
 # Check if IPv6 is already disabled
 ipv6_status=$(sysctl net.ipv6.conf.all.disable_ipv6 | awk '{print $3}')
 if [[ $ipv6_status -eq 1 ]]; then
-    echo "IPv6 is already disabled." >> $LOG_FILE
+    echo "IPv6 is already disabled" >> $LOG_FILE
     exit 0
 fi
 
