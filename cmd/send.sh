@@ -3,7 +3,7 @@
 if [ -f /home/config.env ]; then
     source /home/config.env
 else
-    echo "Warning: Configuration file not found"
+    echo "Warning: Configuration file not found! Skipping log request..."
     exit 0
 fi
 
