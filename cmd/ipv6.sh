@@ -43,4 +43,4 @@ sudo sysctl -p
 sudo systemctl restart networking
 
 # Log the successful disable of IPv6
-echo "IPv6 disabled successfully and changes applied without reboot." >> $LOG_FILE
+echo "IPv6 disabled successfully." >> $LOG_FILE
