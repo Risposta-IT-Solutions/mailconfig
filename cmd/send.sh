@@ -21,8 +21,6 @@ fi
 
 if [ "$ENVIRONMENT" == "production" ]; then
     URL="https://api.pay-per-lead.co.uk/mailConfig/log"
-elif [ "$ENVIRONMENT" == "local" ]; then
-    URL="http://payperlead.loc/mailConfig/log"
 else
     URL="https://beta.api.pay-per-lead.co.uk/mailConfig/log"
 fi
