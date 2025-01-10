@@ -1,6 +1,8 @@
 #!/bin/bash
 source /home/config.env
 
+cd /home/mailconfig/cmd/ && ./status.sh "in_progress"
+
 # Preconfigure the Postfix options
 echo "postfix postfix/main_mailer_type select Internet Site" | sudo debconf-set-selections
 echo "postfix postfix/mailname string $(hostname -f)" | sudo debconf-set-selections

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd /home/mailconfig/cmd/ && ./status.sh "in_progress"
+
 LOG_FILE="/home/jenkins.log"
 
 # Check if the configuration file exists
