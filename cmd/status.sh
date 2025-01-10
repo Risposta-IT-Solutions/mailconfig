@@ -41,7 +41,8 @@ DATA=$(jq -n \
     --arg ip "$IP" \
     --arg domain "$DOMAIN" \
     --arg status "$escaped_message" \
-    '{"ip": $ip, "domain": $domain, "status": $status}')
+    --arg field "$field" \
+    '{"ip": $ip, "domain": $domain, "status": $status, "field": $field}')
 
 # Send POST request
 response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
