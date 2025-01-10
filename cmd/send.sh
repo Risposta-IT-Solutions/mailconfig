@@ -1,4 +1,12 @@
 #!/bin/bash
+
+if [ -f /home/config.env ]; then
+    source /home/config.env
+else
+    echo "Warning: Configuration file not found"
+    exit 0
+fi
+
 source /home/config.env
 
 # Check if a message is provided
