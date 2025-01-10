@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 if [[ -f "/home/config.env" ]]; then
     source /home/config.env
 else 
@@ -26,13 +25,13 @@ else
 fi
 
 if ! command -v jq > /dev/null 2>&1; then
-echo "jq not found. Installing jq..."
-sudo apt update && sudo apt install -y jq
+    echo "jq not found. Installing jq..."
+    sudo apt update && sudo apt install -y jq
 fi
 
 if ! command -v curl > /dev/null 2>&1; then
-echo "curl not found. Installing curl..."
-sudo apt update && sudo apt install -y curl
+    echo "curl not found. Installing curl..."
+    sudo apt update && sudo apt install -y curl
 fi
 
 # Escape special characters in the message
@@ -45,17 +44,22 @@ DATA=$(jq -n \
     --arg message "$escaped_message" \
     '{"ip": $ip, "domain": $domain, "message": $message}')
 
-# Send POST request
-response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+# Send POST request and capture response text and status code
+response=$(curl -s -w "\n%{http_code}" -X POST \
     -H "Content-Type: application/json" \
     -d "$DATA" "$URL")
 
+# Separate the response body and status code
+response_text=$(echo "$response" | sed '$d')
+response_status=$(echo "$response" | tail -n1)
+
 # Check the HTTP status code
-if [ "$response" -eq 200 ]; then
-    echo "Log request successful [ $URL ] with status $response"
+if [ "$response_status" -eq 200 ]; then
+    echo "Log request successful [ $URL ] with status $response_status"
+    echo "Response: $response_text"
     exit 0
 else
-    echo "Log request failed with status code $response"
+    echo "Log request failed with status code $response_status"
+    echo "Response: $response_text"
     exit 1
 fi
-

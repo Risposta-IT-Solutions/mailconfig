@@ -47,17 +47,23 @@ DATA=$(jq -n \
     --arg field "$field" \
     '{"ip": $ip, "domain": $domain, "status": $status, "field": $field}')
 
-# Send POST request
-response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+# Send POST request and capture response text and status code
+response=$(curl -s -w "\n%{http_code}" -X POST \
     -H "Content-Type: application/json" \
     -d "$DATA" "$URL")
 
+# Separate the response body and status code
+response_text=$(echo "$response" | sed '$d')
+response_status=$(echo "$response" | tail -n1)
+
 # Check the HTTP status code
-if [ "$response" -eq 200 ]; then
-    echo "Status update request successful [ $URL ] with status $response"
+if [ "$response_status" -eq 200 ]; then
+    echo "Status update request successful [ $URL ] with status $response_status"
+    echo "Response: $response_text"
     exit 0
 else
-    echo "Status update request failed with status code $response"
+    echo "Status update failed with status code $response_status"
+    echo "Response: $response_text"
     exit 1
 fi
 
