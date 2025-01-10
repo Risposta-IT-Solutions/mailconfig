@@ -33,5 +33,6 @@ fi
 
 echo "IPv6 disabled successfully." >> $LOG_FILE
 # Reboot the system
-echo "Rebooting the system to apply changes..." >> $LOG_FILE
-sudo reboot
+echo "Rebooting the system in 1 minute to apply changes..." >> $LOG_FILE
+
+sudo shutdown -r +1 
