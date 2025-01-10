@@ -36,6 +36,8 @@ fi
 # Escape special characters in the message
 escaped_message=$(printf '%s' "$1" | jq -R .)
 
+escaped_message=$(echo $escaped_message | sed 's/\"//g')
+
 # Get optional argument field, default to "server"
 field=${2:-"server"}
 
