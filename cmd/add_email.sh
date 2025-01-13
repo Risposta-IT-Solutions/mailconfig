@@ -18,6 +18,9 @@ email=$(echo $email | sed 's/\"//g')
 display_name=$(printf '%s' "$display_name" | jq -R .)
 display_name=$(echo $display_name | sed 's/\"//g')
 
+# Split email to get domain and prefix
+IFS='@' read -r PREFIX DOMAIN <<< "$email"
+
 
 sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
 
