@@ -9,16 +9,11 @@ fi
 
 IP=$(hostname -I | awk '{print $1}')
 
-# Check if mail is provided
-if [ -z "$1" ]; then
-    echo "Error: No mail provided"
-    exit 1
-fi
+#signature = content from /etc/opendkim/keys/$DOMAIN/mail.txt
 
-if [ -z "$2" ]; then
-    echo "Error: No display name provided"
-    exit 1
-fi
+KEY_FILE="/etc/opendkim/keys/$DOMAIN/mail.txt"
+
+$signature = $(cat "$KEY_FILE")
 
 
 if [ "$ENVIRONMENT" == "production" ]; then
@@ -38,7 +33,7 @@ sudo apt update && sudo apt install -y curl
 fi
 # Escape special characters in the mail
 # Escape special characters in the signature
-escaped_signature=$(printf '%s' "$1" | jq -R .)
+escaped_signature=$(printf '%s' "$signature" | jq -R .)
 
 escaped_signature=$(echo $escaped_signature | sed 's/\"//g')
 
