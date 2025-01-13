@@ -20,8 +20,16 @@ IFS='@' read -r PREFIX DOMAIN <<< "$email"
 sudo rm -rf /var/mail/vhosts/$DOMAIN/$PREFIX
 
 if [ $? -ne 0 ]; then
-  echo "An error occurred while deleting the directory for $email." >> $LOG_FILE
+  echo "Failed to delete the directory for $email." >> $LOG_FILE
   exit 1
 fi
 
-echo "Directory deleted successfully for $email." >> $LOG_FILE
+./flush_email.sh "$email"
+
+if [ $? -ne 0 ]; then
+  echo "Failed to delete mail for $email." >> $LOG_FILE
+  exit 1
+fi
+
+echo "Mail deleted successfully for $email." >> $LOG_FILE
+exit 0

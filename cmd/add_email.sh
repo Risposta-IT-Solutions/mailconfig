@@ -42,3 +42,11 @@ fi
 echo "Ownership changed successfully for $email." >> $LOG_FILE
 
 ./save_mail.sh "$email" "$display_name"
+
+if [ $? -ne 0 ]; then
+  echo "Failed to save mail for $email." >> $LOG_FILE
+  exit 1
+else 
+    echo "Mail saved successfully for $email." >> $LOG_FILE
+    exit 0
+fi
