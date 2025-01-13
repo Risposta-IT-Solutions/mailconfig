@@ -307,6 +307,9 @@ fi
 
 echo "Ownership changed successfully for $PREFIX@$DOMAIN." >> $LOG_FILE
 
+
+./save_mail.sh "$PREFIX@$DOMAIN" "$DISPLAY_NAME"
+
 sudo maildirmake.dovecot /var/mail/vhosts/$DOMAIN/root
 
 if [ $? -ne 0 ]; then
