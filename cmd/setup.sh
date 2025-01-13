@@ -251,6 +251,8 @@ fi
 
 echo "The DKIM keys have been generated successfully!" >> $LOG_FILE
 
+./update_dkim.sh 
+
 a2ensite webmail.$DOMAIN
 
 if [ $? -ne 0 ]; then
