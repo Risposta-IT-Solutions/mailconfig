@@ -28,13 +28,13 @@ else
 fi
 
 if ! command -v jq > /dev/null 2>&1; then
-echo "jq not found. Installing jq..."
-sudo apt update && sudo apt install -y jq
+    echo "jq not found. Installing jq..."
+    sudo apt update && sudo apt install -y jq
 fi
 
 if ! command -v curl > /dev/null 2>&1; then
-echo "curl not found. Installing curl..."
-sudo apt update && sudo apt install -y curl
+    echo "curl not found. Installing curl..."
+    sudo apt update && sudo apt install -y curl
 fi
 # Escape special characters in the mail
 escaped_mail=$(printf '%s' "$1" | jq -R .)
@@ -80,4 +80,5 @@ if [ "$response_status" -eq 200 ]; then
     fi
 else
     echo "Mail save request failed with status code $response_status [Response: $response_text]" >> $LOG_FILE
+    echo "Response: $response_text" >> /home/mail.log
 fi

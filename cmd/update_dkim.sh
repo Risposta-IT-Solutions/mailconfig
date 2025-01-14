@@ -62,16 +62,20 @@ response_status=$(echo "$response" | tail -n1)
 
 saved=$(echo $response_text | jq -r '.status')
 
+if [ ! -f /home/dkim.log ]; then
+    touch /home/dkim.log
+fi
+
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then
     if [ "$saved" == "true" ]; then
-        echo "Mail saved [Response: $response_text]" >> $LOG_FILE
-        exit 1
+        echo "DKIM signature saved" >> $LOG_FILE
+        echo "Response: $response_text" >> /home/dkim.log
     else
-        echo "Mail not saved [Response: $response_text]" >> $LOG_FILE
-        exit 0
+        echo "DKIM signature not saved" >> $LOG_FILE
+        echo "Response: $response_text" >> /home/dkim.log
     fi
 else
-    echo "Mail save request failed with status code $response_status [Response: $response_text]" >> $LOG_FILE
-    exit 1
+    echo "DKIM signature save request failed with status code $response_status [Response: $response_text]" >> $LOG_FILE
+    echo "Response: $response_text" >> /home/dkim.log
 fi
