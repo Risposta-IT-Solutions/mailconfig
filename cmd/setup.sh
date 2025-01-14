@@ -251,7 +251,7 @@ fi
 
 echo "The DKIM keys have been generated successfully!" >> $LOG_FILE
 
-./update_dkim.sh 
+cd /home/mailconfig/cmd && ./update_dkim.sh 
 
 a2ensite webmail.$DOMAIN
 
