@@ -9,12 +9,19 @@ fi
 
 IP=$(hostname -I | awk '{print $1}')
 
-#signature = content from /etc/opendkim/keys/$DOMAIN/mail.txt
-
 KEY_FILE="/etc/opendkim/keys/$DOMAIN/mail.txt"
 
-$signature = $(cat "$KEY_FILE")
+if [ ! -f "$KEY_FILE" ]; then
+    echo "Error: Key file not found" >> $LOG_FILE
+    exit 1
+fi
 
+signature=$(cat "$KEY_FILE")
+
+if [ -z "$signature" ]; then
+    echo "Error: Signature is empty" >> $LOG_FILE
+    exit 1
+fi
 
 if [ "$ENVIRONMENT" == "production" ]; then
     URL="https://api.pay-per-lead.co.uk/mailConfig/saveSignature"
@@ -23,15 +30,15 @@ else
 fi
 
 if ! command -v jq > /dev/null 2>&1; then
-echo "jq not found. Installing jq..."
-sudo apt update && sudo apt install -y jq
+    echo "jq not found. Installing jq..."
+    sudo apt update && sudo apt install -y jq
 fi
 
 if ! command -v curl > /dev/null 2>&1; then
-echo "curl not found. Installing curl..."
-sudo apt update && sudo apt install -y curl
+    echo "curl not found. Installing curl..."
+    sudo apt update && sudo apt install -y curl
 fi
-# Escape special characters in the mail
+
 # Escape special characters in the signature
 escaped_signature=$(printf '%s' "$signature" | jq -R .)
 

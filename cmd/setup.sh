@@ -259,6 +259,10 @@ echo "The DKIM keys have been generated successfully!" >> $LOG_FILE
 
 cd /home/mailconfig/cmd && ./update_dkim.sh 
 
+if [ $? -ne 0 ]; then
+  echo "Warning : An error occurred while updating the DKIM signature!" >> $LOG_FILE
+fi
+
 a2ensite webmail.$DOMAIN
 
 if [ $? -ne 0 ]; then
