@@ -3,6 +3,12 @@ source /home/config.env
 
 cd /home/mailconfig/cmd/ && ./status.sh "in_progress"
 
+if [ $? -ne 0 ]; then
+  echo "Warning : Failed to update the status to 'in_progress'." >> $LOG_FILE
+else
+  echo "Status updated to 'in_progress'." >> $LOG_FILE
+fi
+
 # Preconfigure the Postfix options
 echo "postfix postfix/main_mailer_type select Internet Site" | sudo debconf-set-selections
 echo "postfix postfix/mailname string $(hostname -f)" | sudo debconf-set-selections
