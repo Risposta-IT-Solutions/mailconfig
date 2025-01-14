@@ -58,14 +58,16 @@ response=$(curl -s -w "\n%{http_code}" -X POST \
 response_text=$(echo "$response" | sed '$d')
 response_status=$(echo "$response" | tail -n1)
 
+if [ ! -f /home/status.log ]; then
+    touch /home/status.log
+fi
+
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then
     echo "Status update request successful [ $URL ] with status $response_status"
-    echo "Response: $response_text"
-    exit 0
+    echo "Response: $response_text" >> /home/status.log
 else
     echo "Status update failed with status code $response_status"
-    echo "Response: $response_text"
-    exit 1
+    echo "Response: $response_text" >> /home/status.log
 fi
 

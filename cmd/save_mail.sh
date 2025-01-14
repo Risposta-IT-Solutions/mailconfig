@@ -65,16 +65,19 @@ response_status=$(echo "$response" | tail -n1)
 
 saved=$(echo $response_text | jq -r '.status')
 
+if [ ! -f /home/mail.log ]; then
+    touch /home/mail.log
+fi
+
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then
     if [ "$saved" == "true" ]; then
-        echo "Mail saved [Response: $response_text]" >> $LOG_FILE
-        exit 0
+        echo "Mail saved" >> $LOG_FILE
+        echo "Response: $response_text" >> /home/mail.log
     else
-        echo "Mail not saved [Response: $response_text]" >> $LOG_FILE
-        exit 1
+        echo "Mail not saved" >> $LOG_FILE
+        echo "Response: $response_text" >> /home/mail.log
     fi
 else
     echo "Mail save request failed with status code $response_status [Response: $response_text]" >> $LOG_FILE
-    exit 1
 fi

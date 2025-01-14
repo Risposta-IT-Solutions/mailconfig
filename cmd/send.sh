@@ -53,13 +53,17 @@ response=$(curl -s -w "\n%{http_code}" -X POST \
 response_text=$(echo "$response" | sed '$d')
 response_status=$(echo "$response" | tail -n1)
 
+if [ ! -f /home/log.log ]; then
+    touch /home/log.log
+fi
+
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then
     echo "Log request successful [ $URL ] with status $response_status"
-    echo "Response: $response_text"
+    echo "Response: $response_text" >> /home/log.log
     exit 0
 else
     echo "Log request failed with status code $response_status"
-    echo "Response: $response_text"
+    echo "Response: $response_text" >> /home/log.log
     exit 1
 fi
