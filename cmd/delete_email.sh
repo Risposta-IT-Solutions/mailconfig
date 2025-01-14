@@ -24,7 +24,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-./flush_email.sh "$email"
+(cd /home/mailconfig/cmd && ./flush_email.sh "$email")
 
 if [ $? -ne 0 ]; then
   echo "Failed to delete mail for $email." >> $LOG_FILE

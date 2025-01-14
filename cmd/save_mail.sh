@@ -69,10 +69,10 @@ saved=$(echo $response_text | jq -r '.status')
 if [ "$response_status" -eq 200 ]; then
     if [ "$saved" == "true" ]; then
         echo "Mail saved [Response: $response_text]" >> $LOG_FILE
-        exit 1
+        exit 0
     else
         echo "Mail not saved [Response: $response_text]" >> $LOG_FILE
-        exit 0
+        exit 1
     fi
 else
     echo "Mail save request failed with status code $response_status [Response: $response_text]" >> $LOG_FILE

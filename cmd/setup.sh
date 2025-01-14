@@ -1,7 +1,7 @@
 #!/bin/bash
 source /home/config.env
 
-cd /home/mailconfig/cmd/ && ./status.sh "in_progress"
+(cd /home/mailconfig/cmd/ && ./status.sh "in_progress")
 
 if [ $? -ne 0 ]; then
   echo "Warning : Failed to update the status to 'in_progress'." >> $LOG_FILE
@@ -257,7 +257,7 @@ fi
 
 echo "The DKIM keys have been generated successfully!" >> $LOG_FILE
 
-cd /home/mailconfig/cmd && ./update_dkim.sh 
+(cd /home/mailconfig/cmd && ./update_dkim.sh) 
 
 if [ $? -ne 0 ]; then
   echo "Warning : An error occurred while updating the DKIM signature!" >> $LOG_FILE
@@ -319,8 +319,11 @@ fi
 
 echo "Ownership changed successfully for $PREFIX@$DOMAIN." >> $LOG_FILE
 
+(cd /home/mailconfig/cmd && ./save_mail.sh "$PREFIX@$DOMAIN" "$DISPLAY_NAME")
 
-./save_mail.sh "$PREFIX@$DOMAIN" "$DISPLAY_NAME"
+if [ $? -ne 0 ]; then
+  echo "Warning : An error occurred while saving the mail address!" >> $LOG_FILE
+fi
 
 sudo maildirmake.dovecot /var/mail/vhosts/$DOMAIN/root
 
@@ -486,9 +489,7 @@ fi
 
 echo "Apache reloaded successfully!" >> $LOG_FILE
 
-# execute /home/mailconfig/cmd/ipv6.sh
-
-cd /home/mailconfig/cmd/ && ./ipv6.sh || { echo "Failed to execute ipv6.sh"; exit 1; }
+(cd /home/mailconfig/cmd/ && ./ipv6.sh)
 
 echo "Setup completed successfully!" >> $LOG_FILE
 
