@@ -54,19 +54,18 @@ fi
 echo "Ownership changed successfully for $email." >> /home/add_email.log
 
 mysql -u root postfix_db <<EOF
-INSERT INTO
-  'virtual_users'
+INSERT INTO virtual_users (id, domain_id, password, email)
 VALUES (
-    NULL,
-    (SELECT id FROM virtual_domains WHERE name='$DOMAIN'),
-    'a84f69cdf4c0cac5e6c8bb8043f5655b3c5ae5bd1908397c873c72a32ebff30a',
-    "$email"
-  );
+  NULL,
+  (SELECT id FROM virtual_domains WHERE name='$DOMAIN'),
+  'a84f69cdf4c0cac5e6c8bb8043f5655b3c5ae5bd1908397c873c72a32ebff30a',
+  '$email'
+);
 EOF
-
 
 if [ $? -ne 0 ]; then
   echo "Failed to add $email to the database." >> /home/add_email.log
+  echo "MySQL Error: $mysql_error" >> /home/add_email.log
   exit 1
 else
   echo "Added $email to the database." >> /home/add_email.log
