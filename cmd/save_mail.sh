@@ -71,7 +71,7 @@ fi
 
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then
-    if [ "$saved" == "true" ]; then
+    if [ $saved -gt 0 ]; then
         echo "Mail saved" >> $LOG_FILE
         echo "Response: $response_text" >> /home/mail.log
     else
