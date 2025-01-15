@@ -19,9 +19,9 @@ fi
 email="$1"
 
 if [ "$ENVIRONMENT" == "production" ]; then
-    URL="https://api.pay-per-lead.co.uk/mailConfig/deleteMail"
+    URL="https://api.pay-per-lead.co.uk/mailConfig/deleteEmail"
 else
-    URL="https://beta.api.pay-per-lead.co.uk/mailConfig/deleteMail"
+    URL="https://beta.api.pay-per-lead.co.uk/mailConfig/deleteEmail"
 fi
 
 if ! command -v jq > /dev/null 2>&1; then

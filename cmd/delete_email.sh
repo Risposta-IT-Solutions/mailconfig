@@ -19,6 +19,7 @@ IFS='@' read -r PREFIX DOMAIN <<< "$email"
 echo "" > /home/delete_email.log
 
 echo "Deleting mail for $email." >> /home/delete_email.log
+echo "Email: $email" >> /home/delete_email.log
 echo "Domain: $DOMAIN" >> /home/delete_email.log
 echo "Prefix: $PREFIX" >> /home/delete_email.log
 
