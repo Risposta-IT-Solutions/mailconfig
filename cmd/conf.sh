@@ -28,6 +28,8 @@ echo "Configuration file '$CONF_FILE' created" > $LOG_FILE
 
 cat $CONF_FILE
 
+#empty the log file
+truncate -s 0 $LOG_FILE
 
 #allow ports
 ufw allow http > /dev/null 2>&1

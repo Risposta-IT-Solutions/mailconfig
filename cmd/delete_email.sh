@@ -19,17 +19,18 @@ IFS='@' read -r PREFIX DOMAIN <<< "$email"
 # Remove the email directory
 sudo rm -rf /var/mail/vhosts/$DOMAIN/$PREFIX
 
+echo "" >> /home/delete_email.log
+
 if [ $? -ne 0 ]; then
-  echo "Failed to delete the directory for $email." >> $LOG_FILE
+  echo "Failed to delete the directory for $email." >> /home/delete_email.log
   exit 1
 fi
 
 (cd /home/mailconfig/cmd && ./flush_email.sh "$email")
 
 if [ $? -ne 0 ]; then
-  echo "Failed to delete mail for $email." >> $LOG_FILE
-  exit 1
+  echo "Failed to delete mail for $email." >> /home/delete_email.log
 fi
 
-echo "Mail deleted successfully for $email." >> $LOG_FILE
+echo "Mail deleted successfully for $email." >> /home/delete_email.log
 exit 0

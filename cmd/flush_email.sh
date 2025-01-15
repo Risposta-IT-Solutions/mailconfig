@@ -55,16 +55,18 @@ response_status=$(echo "$response" | tail -n1)
 
 deleted=$(echo $response_text | jq -r '.status')
 
+echo "" >> /home/flush_email.log
+
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then
     if [ "$deleted" == "true" ]; then
-        echo "Mail deleted [Response: $response_text]" >> $LOG_FILE
+        echo "Mail deleted [Response: $response_text]" >> /home/flush_email.log
         exit 0
     else
-        echo "Mail not deleted [Response: $response_text]" >> $LOG_FILE
+        echo "Mail not deleted [Response: $response_text]" >> /home/flush_email.log
         exit 1
     fi
 else
-    echo "Mail delete request failed with status code $response_status [Response: $response_text]" >> $LOG_FILE
+    echo "Mail delete request failed with status code $response_status [Response: $response_text]" >> /home/flush_email.log
     exit 1
 fi
