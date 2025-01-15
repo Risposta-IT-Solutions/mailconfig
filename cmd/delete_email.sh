@@ -36,6 +36,18 @@ else
   echo "Directory does not exist for $email." >> /home/delete_email.log
 fi
 
+mysql -u root postfix_db <<EOF
+DELETE FROM virtual_users WHERE email='$email';
+EOF
+
+if [ $? -ne 0 ]; then
+  echo "Failed to delete $email from the database." >> /home/delete_email.log
+  exit 1
+else
+  echo "Deleted $email from the database." >> /home/delete_email.log
+fi
+
+
 (cd /home/mailconfig/cmd && ./flush_email.sh "$email")
 
 if [ $? -ne 0 ]; then
