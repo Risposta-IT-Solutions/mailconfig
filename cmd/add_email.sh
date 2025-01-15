@@ -1,9 +1,11 @@
 #!/bin/bash
 
+echo "" > /home/add_email.log
+
 # Check if both arguments are provided
 if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Usage: $0 <email> <display_name>"
-    exit 1
+  echo "Error: Both email and display name are required." >> /home/add_email.log
+  exit 1
 fi
 
 # Store arguments to variables
@@ -21,6 +23,11 @@ display_name=$(echo $display_name | sed 's/\"//g')
 # Split email to get domain and prefix
 IFS='@' read -r PREFIX DOMAIN <<< "$email"
 
+echo "Email: $email" >> /home/add_email.log
+echo "Display Name: $display_name" >> /home/add_email.log
+echo "Domain: $DOMAIN" >> /home/add_email.log
+echo "Prefix: $PREFIX" >> /home/add_email.log
+
 
 sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
 
@@ -29,7 +36,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Directory created successfully for $email." >> $LOG_FILE
+echo "Directory created successfully for $email." >> /home/add_email.log
 
 
 sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/$PREFIX
@@ -39,14 +46,14 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Ownership changed successfully for $email." >> $LOG_FILE
+echo "Ownership changed successfully for $email." >> /home/add_email.log
 
 (cd /home/mailconfig/cmd && ./save_mail.sh "$email" "$display_name")
 
 if [ $? -ne 0 ]; then
-  echo "Failed to save mail for $email." >> $LOG_FILE
+  echo "Failed to save mail for $email." >>  /home/add_email.log
   exit 1
 else 
-    echo "Mail saved successfully for $email." >> $LOG_FILE
+    echo "Mail saved successfully for $email." >> /home/add_email.log
     exit 0
 fi
