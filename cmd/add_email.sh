@@ -25,7 +25,7 @@ IFS='@' read -r PREFIX DOMAIN <<< "$email"
 sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
 
 if [ $? -ne 0 ]; then
-  echo "An error occurred while creating the directory for $email." >> $LOG_FILE
+  echo "An error occurred while creating the directory for $email." >> /home/add_email.log
   exit 1
 fi
 
@@ -35,7 +35,7 @@ echo "Directory created successfully for $email." >> $LOG_FILE
 sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/$PREFIX
 
 if [ $? -ne 0 ]; then
-  echo "An error occurred while changing ownership of the directory for $email." >> $LOG_FILE
+  echo "An error occurred while changing ownership of the directory for $email." >> /home/add_email.log
   exit 1
 fi
 

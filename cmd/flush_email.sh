@@ -55,7 +55,7 @@ response_status=$(echo "$response" | tail -n1)
 
 deleted=$(echo $response_text | jq -r '.status')
 
-echo "" >> /home/flush_email.log
+echo "" > /home/flush_email.log
 
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then

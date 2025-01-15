@@ -19,7 +19,7 @@ IFS='@' read -r PREFIX DOMAIN <<< "$email"
 # Remove the email directory
 sudo rm -rf /var/mail/vhosts/$DOMAIN/$PREFIX
 
-echo "" >> /home/delete_email.log
+echo "" > /home/delete_email.log
 
 if [ $? -ne 0 ]; then
   echo "Failed to delete the directory for $email." >> /home/delete_email.log
