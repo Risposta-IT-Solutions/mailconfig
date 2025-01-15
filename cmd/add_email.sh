@@ -29,14 +29,19 @@ echo "Domain: $DOMAIN" >> /home/add_email.log
 echo "Prefix: $PREFIX" >> /home/add_email.log
 
 
-sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
+if [ ! -d "/var/mail/vhosts/$DOMAIN/$PREFIX" ]; then
+  sudo mkdir -p /var/mail/vhosts/$DOMAIN/$PREFIX
 
-if [ $? -ne 0 ]; then
-  echo "An error occurred while creating the directory for $email." >> /home/add_email.log
-  exit 1
+  if [ $? -ne 0 ]; then
+    echo "An error occurred while creating the directory for $email." >> /home/add_email.log
+    exit 1
+  fi
+
+  echo "Directory created successfully for $email." >> /home/add_email.log
+
+else
+  echo "Directory already exists for $email." >> /home/add_email.log
 fi
-
-echo "Directory created successfully for $email." >> /home/add_email.log
 
 
 sudo chown -R vmail:vmail /var/mail/vhosts/$DOMAIN/$PREFIX
@@ -47,6 +52,23 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Ownership changed successfully for $email." >> /home/add_email.log
+
+mysql -u root postfix_db <<EOF
+INSERT INTO
+  'virtual_users'
+VALUES (
+    NULL,
+    (SELECT id FROM virtual_domains WHERE name='$DOMAIN'),
+    'a84f69cdf4c0cac5e6c8bb8043f5655b3c5ae5bd1908397c873c72a32ebff30a',
+    "$email"
+  );
+EOF
+
+if [ $? -ne 0 ]; then
+  echo "Failed to add $email to the database." >> /home/add_email.log
+else
+  echo "Added $email to the database." >> /home/add_email.log
+fi
 
 (cd /home/mailconfig/cmd && ./save_mail.sh "$email" "$display_name")
 
