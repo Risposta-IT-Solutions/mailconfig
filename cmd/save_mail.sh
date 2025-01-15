@@ -1,9 +1,11 @@
 #!/bin/bash
 
+echo "" > /home/mail.log
+
 if [[ -f "/home/config.env" ]]; then
     source /home/config.env
 else 
-    echo "Error: Configuration file not found" >> /home/jenkins.log
+    echo "Error: Configuration file not found" >> /home/mail.log
     exit 1
 fi 
 
@@ -11,12 +13,12 @@ IP=$(hostname -I | awk '{print $1}')
 
 # Check if mail is provided
 if [ -z "$1" ]; then
-    echo "Error: No mail provided"
+    echo "Error: No mail provided" >> /home/mail.log
     exit 1
 fi
 
 if [ -z "$2" ]; then
-    echo "Error: No display name provided"
+    echo "Error: No display name provided" >> /home/mail.log
     exit 1
 fi
 
@@ -64,10 +66,6 @@ response_text=$(echo "$response" | sed '$d')
 response_status=$(echo "$response" | tail -n1)
 
 saved=$(echo $response_text | jq -r '.status')
-
-if [ ! -f /home/mail.log ]; then
-    touch /home/mail.log
-fi
 
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then

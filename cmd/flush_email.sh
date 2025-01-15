@@ -1,9 +1,10 @@
 #!/bin/bash
+echo "" > /home/flush_email.log
 
 if [[ -f "/home/config.env" ]]; then
     source /home/config.env
 else 
-    echo "Error: Configuration file not found" >> /home/jenkins.log
+    echo "Error: Configuration file not found" >> /home/flush_email.log
     exit 1
 fi 
 
@@ -11,7 +12,7 @@ IP=$(hostname -I | awk '{print $1}')
 
 # Check if email is provided
 if [ -z "$1" ]; then
-    echo "Error: No email provided"
+    echo "Error: No email provided" >> /home/flush_email.log
     exit 1
 fi
 
@@ -54,8 +55,6 @@ response_text=$(echo "$response" | sed '$d')
 response_status=$(echo "$response" | tail -n1)
 
 deleted=$(echo $response_text | jq -r '.status')
-
-echo "" > /home/flush_email.log
 
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then

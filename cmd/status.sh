@@ -2,7 +2,7 @@
 if [[ -f "/home/config.env" ]]; then
     source /home/config.env
 else 
-    DOMAIN="0"
+    DOMAIN=$(hostname -d)
     tmp_conf_file="/home/tmp.env"
     if [[ -f "$tmp_conf_file" ]]; then
         source $tmp_conf_file
