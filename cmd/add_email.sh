@@ -64,8 +64,10 @@ VALUES (
   );
 EOF
 
+
 if [ $? -ne 0 ]; then
   echo "Failed to add $email to the database." >> /home/add_email.log
+  exit 1
 else
   echo "Added $email to the database." >> /home/add_email.log
 fi
