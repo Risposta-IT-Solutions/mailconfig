@@ -61,19 +61,19 @@ VALUES (
         1,
         1,
         'postmaster@{{_domain_}}',
-        'paul@emserve.co.uk'
+        'postmaster@emserve.co.uk'
     ),
     (
         2,
         1,
         'abuse@{{_domain_}}',
-        'paul@emserve.co.uk'
+        'postmaster@emserve.co.uk'
     ),
     (
         3,
         1,
         'datacontroller@{{_domain_}}',
-        'paul@emserve.co.uk'
+        'datacontroller@emediasolutions.co.uk'
     );
 /*!40000 ALTER TABLE `virtual_aliases` ENABLE KEYS */
 ;
