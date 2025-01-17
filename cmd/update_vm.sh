@@ -23,3 +23,13 @@ if [ $? -ne 0 ]; then
 else
     echo "Virtual mail updated successfully." >> /home/update_vm.log
 fi
+
+sudo systemctl restart postfix dovecot
+
+if [ $? -ne 0 ]; then
+  echo "An error occurred while restarting Postfix and Dovecot!" >> /home/update_vm.log
+  exit 1
+else
+    echo "Postfix and Dovecot restarted successfully!" >> /home/update_vm.log
+    exit 0
+fi
