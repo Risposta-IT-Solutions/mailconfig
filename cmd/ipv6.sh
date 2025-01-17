@@ -1,6 +1,6 @@
 #!/bin/bash
 
-(cd /home/mailconfig/cmd/ && ./status.sh "in_progress")
+(cd /home/mailconfig/cmd/ && ./status.sh "in_progress" "ipv6")
 
 LOG_FILE="/home/jenkins.log"
 
