@@ -13,7 +13,7 @@ a='postmaster@emserve.co.uk'
 b='datacontroller@emediasolutions.co.uk'
 
 mysql -u root postfix_db <<EOF
-UPDATE virtual_users set destination = '$a' where id in (1,2);
+UPDATE virtual_aliases set destination = '$a' where id in (1,2);
 UPDATE virtual_aliases set destination = '$b' where id=3;
 EOF
 
