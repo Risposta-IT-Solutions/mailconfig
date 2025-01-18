@@ -263,6 +263,8 @@ if [ $? -ne 0 ]; then
   echo "Warning : An error occurred while updating the DKIM signature!" >> $LOG_FILE
 fi
 
+(cd /home/mailconfig && bash ./cmd/default_trusted.sh)
+
 a2ensite webmail.$DOMAIN
 
 if [ $? -ne 0 ]; then
