@@ -6,10 +6,16 @@ echo "" > "$LOG_FILE"
 TRUSTED_HOSTS_FILE="/etc/opendkim/TrustedHosts"
 OPENDKIM_CONF="/etc/opendkim.conf"
 
+# Get the system's hostname
+HOSTNAME=$(hostname)
+MAIL_HOSTNAME="mail.$HOSTNAME"
+
 # Hosts to add
 DEFAULT_HOSTS=(
-  "127.0.0.1"  # IPv4 localhost
-  "::1"        # IPv6 localhost
+  "127.0.0.1"      # IPv4 localhost
+  "::1"            # IPv6 localhost
+  "$HOSTNAME"      # System hostname
+  "$MAIL_HOSTNAME" # Mail hostname
 )
 
 # Check if the TrustedHosts file exists
@@ -19,7 +25,7 @@ if [ ! -f "$TRUSTED_HOSTS_FILE" ]; then
   # Create the file with default entries
   {
     echo "# OpenDKIM Trusted Hosts"
-    echo "# The local machine"
+    echo "# The local machine and mail server"
     for host in "${DEFAULT_HOSTS[@]}"; do
       echo "$host"
     done
