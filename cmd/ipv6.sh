@@ -46,3 +46,5 @@ sudo systemctl restart networking
 
 # Log the successful disable of IPv6
 echo "IPv6 disabled successfully." >> $LOG_FILE
+
+(cd /home/mailconfig/cmd/ && ./status.sh "completed" "ipv6")

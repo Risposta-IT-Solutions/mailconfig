@@ -9,6 +9,10 @@ else
     fi
 fi 
 
+if [ ! -f /home/status.log ]; then
+    touch /home/status.log
+fi
+
 IP=$(hostname -I | awk '{print $1}')
 
 # Check if a status is provided
@@ -39,15 +43,18 @@ escaped_message=$(printf '%s' "$1" | jq -R .)
 escaped_message=$(echo $escaped_message | sed 's/\"//g')
 
 # Get optional argument field, default to "server"
-field=${2:-"server"}
+prefix=${2:-"server"}
+
+echo "$prefix status: $escaped_message" >> /home/status.log
 
 # Build JSON data
 DATA=$(jq -n \
     --arg ip "$IP" \
     --arg domain "$DOMAIN" \
     --arg status "$escaped_message" \
-    --arg field "$field" \
-    '{"ip": $ip, "domain": $domain, "status": $status, "field": $field}')
+    --arg prefix "$prefix" \
+    '{"ip": $ip, "domain": $domain, "status": $status, "prefix": $prefix}'
+    )
 
 # Send POST request and capture response text and status code
 response=$(curl -s -w "\n%{http_code}" -X POST \
@@ -58,9 +65,6 @@ response=$(curl -s -w "\n%{http_code}" -X POST \
 response_text=$(echo "$response" | sed '$d')
 response_status=$(echo "$response" | tail -n1)
 
-if [ ! -f /home/status.log ]; then
-    touch /home/status.log
-fi
 
 # Check the HTTP status code
 if [ "$response_status" -eq 200 ]; then
