@@ -1,6 +1,7 @@
 #!/bin/bash
+set -e  # Exit immediately on error
 
-# Check if the required parameters are provided
+# Check if required parameters are provided
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
   echo "Usage: $0 <domain> <prefix> <company> <environment> <display_name>"
   exit 1
@@ -15,23 +16,18 @@ DISPLAY_NAME="${5:-$PREFIX}"
 CONF_FILE="/home/config.env"
 LOG_FILE="/home/jenkins.log"
 
-# Create or overwrite the configuration file
-echo "DOMAIN='$DOMAIN'" > $CONF_FILE
-echo "PREFIX='$PREFIX'" >> $CONF_FILE
-echo "COMPANY='$COMPANY'" >> $CONF_FILE
-echo "LOG_FILE='$LOG_FILE'" >> $CONF_FILE
-echo "ENVIRONMENT='$ENVIRONMENT'" >> $CONF_FILE
-echo "DISPLAY_NAME='$DISPLAY_NAME'" >> $CONF_FILE
+# Create or overwrite the configuration file safely
+printf "DOMAIN=\"%s\"\nPREFIX=\"%s\"\nCOMPANY=\"%s\"\nLOG_FILE=\"%s\"\nENVIRONMENT=\"%s\"\nDISPLAY_NAME=\"%s\"\n" \
+    "$DOMAIN" "$PREFIX" "$COMPANY" "$LOG_FILE" "$ENVIRONMENT" "$DISPLAY_NAME" > "$CONF_FILE"
 
-# Print a success message
-echo "Configuration file '$CONF_FILE' created" > $LOG_FILE
+# Print success message
+echo "Configuration file '$CONF_FILE' created" >> "$LOG_FILE"
+cat "$CONF_FILE"
 
-cat $CONF_FILE
+# Empty the log file safely
+truncate -s 0 "$LOG_FILE" || { echo "Error: Failed to clear log file" >&2; exit 1; }
 
-#empty the log file
-truncate -s 0 $LOG_FILE
-
-#allow ports
+# Allow necessary ports using UFW (firewall)
 ufw allow http > /dev/null 2>&1
 ufw allow https > /dev/null 2>&1
 ufw allow smtp > /dev/null 2>&1
@@ -40,10 +36,12 @@ ufw allow 587 > /dev/null 2>&1
 ufw allow 465 > /dev/null 2>&1
 ufw allow ssh > /dev/null 2>&1
 
-ufw --force enable
+# Enable UFW (force mode)
+ufw --force enable || { echo "Error: Failed to enable UFW" >&2; exit 1; }
 
-echo "Ufw enabled and ports allowed" >> $LOG_FILE
+echo "UFW enabled and ports allowed" >> "$LOG_FILE"
 
-sudo apt-get update -y > /dev/null 2>&1
+# Update the system safely
+sudo apt-get update -y > /dev/null 2>&1 || { echo "Error: System update failed" >&2; exit 1; }
 
-echo "System updated"
+echo "System updated" >> "$LOG_FILE"
