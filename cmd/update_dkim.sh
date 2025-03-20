@@ -40,9 +40,7 @@ if ! command -v curl > /dev/null 2>&1; then
 fi
 
 # Escape special characters in the signature
-escaped_signature=$(printf '%s' "$signature" | jq -R .)
-
-escaped_signature=$(echo $escaped_signature | sed 's/\"//g')
+escaped_signature=$(tr -d '\n" ' < "$KEY_FILE")
 
 # Build JSON data
 DATA=$(jq -n \
